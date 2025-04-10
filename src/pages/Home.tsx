@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { RootState } from '../store/store';
-import { useSelector } from 'react-redux';
+import { RootState, addComment } from '../store/store';
+import { useSelector, useDispatch } from 'react-redux';
 import { Post } from '../constants/mockData';
 import {
   Container,
@@ -8,6 +8,7 @@ import {
   Avatar,
   PostHeader,
   PostImage,
+  VerifiedBadge,
   PostFooter,
   Button,
   CommentSection,
@@ -17,6 +18,14 @@ import {
 const Home: React.FC = () => {
   const posts = useSelector((state: RootState) => state.posts.posts);
   const [visiblePosts, setVisiblePosts] = useState<Post[]>([]);
+  const [commentText, setCommentText] = useState('');
+  const dispatch = useDispatch();
+  const handleAddComment = (postId: string) => {
+    if (commentText.trim()) {
+      dispatch(addComment({ postId, text: commentText }));
+      setCommentText('');
+    }
+  };
   const [postCount, setPostCount] = useState(5); // Number of posts to show initially
 
   // Load initial posts
@@ -43,7 +52,13 @@ const Home: React.FC = () => {
         <PostCard key={post.id}>
           <PostHeader>
             <Avatar src={post.avatar} alt={`${post.username}'s avatar`} />
-            <strong>{post.username}</strong>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <strong>{post.username}</strong>
+              {post.isVerified && <VerifiedBadge aria-label="Verified account">✔</VerifiedBadge>}
+            </div>
+            <span style={{ fontSize: '12px', color: '#888', paddingLeft: '10px' }}>
+              {post.timeAgo}
+            </span>
           </PostHeader>
           {post.image && <PostImage src={post.image} alt={post.caption} />}
           {post.video && (
@@ -70,6 +85,13 @@ const Home: React.FC = () => {
                 />
               </CommentStyled>
             ))}
+           <input
+              type="text"
+              placeholder="Add a comment..."
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
+            />
+            <Button onClick={() => handleAddComment(post.id)}>Post</Button>
           </CommentSection>
         </PostCard>
       ))}

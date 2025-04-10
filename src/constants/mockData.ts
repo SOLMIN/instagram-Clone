@@ -8,11 +8,13 @@ export interface Post {
   id: string;
   username: string;
   avatar: string;
-  image?: string; // Optional, as a post can have either an image or a video
-  video?: string; // Optional, for video posts
+  image?: string;
+  video?: string;
   caption: string;
   likes: number;
   comments: Comment[];
+  isVerified?: boolean; // New property for verified users
+  timeAgo: string; // New property for time indicator
 }
 
 export const mockPosts: Post[] = [
@@ -27,6 +29,8 @@ export const mockPosts: Post[] = [
       { id: 'c1', text: 'Looks amazing!', likes: 3 },
       { id: 'c2', text: 'Wish I was there!', likes: 2 },
     ],
+    isVerified: true,
+    timeAgo: '34 min',
   },
   {
     id: '2',
@@ -39,6 +43,8 @@ export const mockPosts: Post[] = [
       { id: 'c3', text: 'Love the view!', likes: 5 },
       { id: 'c4', text: 'Great shot!', likes: 4 },
     ],
+    isVerified: true,
+    timeAgo: '1h',
   },
   {
     id: '3',
@@ -51,6 +57,8 @@ export const mockPosts: Post[] = [
       { id: 'c5', text: 'Incredible journey!', likes: 8 },
       { id: 'c6', text: 'Keep inspiring us!', likes: 6 },
     ],
+    isVerified: true,
+    timeAgo: '2h',
   },
   {
     id: '4',
@@ -63,6 +71,8 @@ export const mockPosts: Post[] = [
       { id: 'c7', text: 'So peaceful!', likes: 4 },
       { id: 'c8', text: 'I love this place!', likes: 3 },
     ],
+    isVerified: true,
+    timeAgo: '45 min',
   },
   {
     id: '5',
@@ -75,6 +85,8 @@ export const mockPosts: Post[] = [
       { id: 'c9', text: 'Yummy!', likes: 6 },
       { id: 'c10', text: 'Where is this place?', likes: 5 },
     ],
+    isVerified: true,
+    timeAgo: '2h',
   },
   {
     id: '6',
@@ -87,6 +99,8 @@ export const mockPosts: Post[] = [
       { id: 'c11', text: 'So thrilling!', likes: 7 },
       { id: 'c12', text: 'I want to try this!', likes: 6 },
     ],
+    isVerified: true,
+    timeAgo: '3h',
   },
   {
     id: '7',
@@ -99,6 +113,8 @@ export const mockPosts: Post[] = [
       { id: 'c13', text: 'So cute!', likes: 10 },
       { id: 'c14', text: 'Adorable!', likes: 8 },
     ],
+    isVerified: true,
+    timeAgo: '4h',
   },
   {
     id: '8',
@@ -111,6 +127,8 @@ export const mockPosts: Post[] = [
       { id: 'c15', text: 'Inspiring!', likes: 12 },
       { id: 'c16', text: 'Great workout!', likes: 9 },
     ],
+    isVerified: true,
+    timeAgo: '5h',
   },
   {
     id: '9',
@@ -123,6 +141,8 @@ export const mockPosts: Post[] = [
       { id: 'c17', text: 'Beautiful!', likes: 15 },
       { id: 'c18', text: 'Amazing work!', likes: 10 },
     ],
+    isVerified: true,
+    timeAgo: '6h',
   },
   {
     id: '10',
@@ -135,6 +155,8 @@ export const mockPosts: Post[] = [
       { id: 'c19', text: 'So true!', likes: 20 },
       { id: 'c20', text: 'Great post!', likes: 18 },
     ],
+    isVerified: true,
+    timeAgo: '7h',
   },
   {
     id: '11',
@@ -147,6 +169,8 @@ export const mockPosts: Post[] = [
       { id: 'c21', text: 'Breathtaking view!', likes: 5 },
       { id: 'c22', text: 'I want to go there!', likes: 3 },
     ],
+    isVerified: true,
+    timeAgo: '8h',
   },
   {
     id: '12',
@@ -159,6 +183,8 @@ export const mockPosts: Post[] = [
       { id: 'c23', text: 'So vibrant!', likes: 4 },
       { id: 'c24', text: 'Love this!', likes: 2 },
     ],
+    isVerified: true,
+    timeAgo: '9h',
   },
   {
     id: '13',
@@ -171,6 +197,8 @@ export const mockPosts: Post[] = [
       { id: 'c25', text: 'So peaceful!', likes: 6 },
       { id: 'c26', text: 'I need a vacation!', likes: 4 },
     ],
+    isVerified: true,
+    timeAgo: '10h',
   },
   {
     id: '14',
@@ -183,6 +211,8 @@ export const mockPosts: Post[] = [
       { id: 'c27', text: 'So motivating!', likes: 8 },
       { id: 'c28', text: 'Great energy!', likes: 5 },
     ],
+    isVerified: true,
+    timeAgo: '11h',
   },
   {
     id: '15',
@@ -195,5 +225,7 @@ export const mockPosts: Post[] = [
       { id: 'c29', text: 'Beautiful work!', likes: 10 },
       { id: 'c30', text: 'So creative!', likes: 7 },
     ],
+    isVerified: true,
+    timeAgo: '12h',
   },
 ];

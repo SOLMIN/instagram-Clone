@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 
 export const Container = styled.div`
-  max-width: 600px;
+  max-width: 468px;
+  max-height: 585px;
   margin: 0 auto;
   padding: 20px;
 `;
@@ -25,6 +26,20 @@ export const PostHeader = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+`;
+
+export const VerifiedBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1da1f2; /* Instagram-like blue */
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  margin-left: 5px;
 `;
 
 export const PostImage = styled.img`
