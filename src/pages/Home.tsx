@@ -3,22 +3,8 @@ import React, { useState } from 'react';
 import { RootState, addComment, likePost, likeComment } from '../store/store'; // Adjust the path based on where your Redux store is defined
 import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled'; 
+import { Post, CommentType } from './Home.type';
 
-export interface Post {
-  id: string;
-  username: string;
-  avatar: string;
-  image: string;
-  caption: string;
-  likes: number;
-  comments: Comment[];
-}
-
-export interface Comment {
-  id: string;
-  text: string; // Ensure the 'text' property is defined
-  likes: number;
-}
 
 const Container = styled.div`
   max-width: 600px;
@@ -103,7 +89,7 @@ const Home: React.FC = () => {
             <span>{post.comments.length} comments</span>
           </PostFooter>
           <CommentSection>
-            {post.comments.map((comment: Comment) => (
+            {post.comments.map((comment: CommentType) => (
               <Comment key={comment.id}>
                 <span>{comment.text}</span>
                 <Button onClick={() => dispatch(likeComment({ postId: post.id, commentId: comment.id }))}>
