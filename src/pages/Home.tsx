@@ -15,7 +15,7 @@ import {
   PostFooter,
   Button,
   CommentSection,
-  CaptionContainer, 
+  CaptionContainer,
   CaptionText,
   CommentsCount,
   CommentInputContainer,

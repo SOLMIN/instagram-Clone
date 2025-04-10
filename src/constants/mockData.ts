@@ -36,7 +36,7 @@ export const mockPosts: Post[] = [
     id: '2',
     username: 'jane_doe',
     avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
-    video: 'https://www.w3schools.com/html/mov_bbb.mp4',
+    video: 'https://assets.mixkit.co/g4zty141nd86zf5hk0d2uxrdqwcg',
     caption: 'City vibes!',
     likes: 20,
     comments: [
@@ -64,7 +64,7 @@ export const mockPosts: Post[] = [
     id: '4',
     username: 'nature_lover',
     avatar: 'https://randomuser.me/api/portraits/women/4.jpg',
-    image: 'https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080',
+    video: 'https://assets.mixkit.co/videos/34563/34563-720.mp4',
     caption: 'Nature is the best therapy!',
     likes: 25,
     comments: [
@@ -120,7 +120,7 @@ export const mockPosts: Post[] = [
     id: '8',
     username: 'fitness_freak',
     avatar: 'https://randomuser.me/api/portraits/men/8.jpg',
-    video: 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4',
+    video: 'https://assets.mixkit.co/videos/51500/51500-720.mp4',
     caption: 'Fitness is not a destination, it’s a way of life!',
     likes: 70,
     comments: [
