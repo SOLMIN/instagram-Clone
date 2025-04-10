@@ -43,7 +43,7 @@ export const mockPosts: Post[] = [
       { id: 'c3', text: 'Love the view!', likes: 5 },
       { id: 'c4', text: 'Great shot!', likes: 4 },
     ],
-    isVerified: true,
+    isVerified: false,
     timeAgo: '1h',
   },
   {
@@ -85,7 +85,7 @@ export const mockPosts: Post[] = [
       { id: 'c9', text: 'Yummy!', likes: 6 },
       { id: 'c10', text: 'Where is this place?', likes: 5 },
     ],
-    isVerified: true,
+    isVerified: false,
     timeAgo: '2h',
   },
   {
@@ -113,7 +113,7 @@ export const mockPosts: Post[] = [
       { id: 'c13', text: 'So cute!', likes: 10 },
       { id: 'c14', text: 'Adorable!', likes: 8 },
     ],
-    isVerified: true,
+    isVerified: false,
     timeAgo: '4h',
   },
   {
@@ -169,7 +169,7 @@ export const mockPosts: Post[] = [
       { id: 'c21', text: 'Breathtaking view!', likes: 5 },
       { id: 'c22', text: 'I want to go there!', likes: 3 },
     ],
-    isVerified: true,
+    isVerified: false,
     timeAgo: '8h',
   },
   {

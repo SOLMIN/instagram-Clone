@@ -7,11 +7,20 @@ import {
   PostCard,
   Avatar,
   PostHeader,
-  PostImage,
+  UsernameContainer,
+  Username,
   VerifiedBadge,
+  TimeAgo,
+  PostImage,
   PostFooter,
   Button,
   CommentSection,
+  CaptionContainer, 
+  CaptionText,
+  CommentsCount,
+  CommentInputContainer,
+  CommentInput,
+  PostButton,
   Comment as CommentStyled,
 } from './Home.styles';
 
@@ -52,13 +61,11 @@ const Home: React.FC = () => {
         <PostCard key={post.id}>
           <PostHeader>
             <Avatar src={post.avatar} alt={`${post.username}'s avatar`} />
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <strong>{post.username}</strong>
+            <UsernameContainer>
+              <Username>{post.username}</Username>
               {post.isVerified && <VerifiedBadge aria-label="Verified account">✔</VerifiedBadge>}
-            </div>
-            <span style={{ fontSize: '12px', color: '#888', paddingLeft: '10px' }}>
-              {post.timeAgo}
-            </span>
+            </UsernameContainer>
+            <TimeAgo>{post.timeAgo}</TimeAgo>
           </PostHeader>
           {post.image && <PostImage src={post.image} alt={post.caption} />}
           {post.video && (
@@ -67,14 +74,21 @@ const Home: React.FC = () => {
               Your browser does not support the video tag.
             </video>
           )}
-          <p>{post.caption}</p>
+
           <PostFooter>
             <LikeButton
               initialLikes={post.likes}
               ariaLabel={`Like post by ${post.username}`}
             />
-            <span>{post.comments.length} comments</span>
+            <CommentsCount>{post.comments.length} comments</CommentsCount>
           </PostFooter>
+          <CaptionContainer>
+            <UsernameContainer>
+              <Username>{post.username}</Username>
+              {post.isVerified && <VerifiedBadge aria-label="Verified account">✔</VerifiedBadge>}
+            </UsernameContainer>
+            <CaptionText>{post.caption}</CaptionText>
+          </CaptionContainer>
           <CommentSection>
             {post.comments.map((comment) => (
               <CommentStyled key={comment.id}>
@@ -85,13 +99,15 @@ const Home: React.FC = () => {
                 />
               </CommentStyled>
             ))}
-           <input
-              type="text"
-              placeholder="Add a comment..."
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-            />
-            <Button onClick={() => handleAddComment(post.id)}>Post</Button>
+            <CommentInputContainer>
+              <CommentInput
+                type="text"
+                placeholder="Add a comment..."
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+              />
+              <PostButton onClick={() => handleAddComment(post.id)}>Post</PostButton>
+            </CommentInputContainer>
           </CommentSection>
         </PostCard>
       ))}
