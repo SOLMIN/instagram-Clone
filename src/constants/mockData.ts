@@ -17,6 +17,70 @@ export interface Post {
   timeAgo: string; // New property for time indicator
 }
 
+export interface User {
+  id: string;
+  username: string;
+  avatar: string;
+  name: string;
+  bio: string;
+  followers: number;
+  following: number;
+  posts: Post[]; // Posts specific to this user
+}
+
+export const mockUsers: User[] = [
+  {
+    id: '1',
+    username: 'john_doe',
+    avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+    name: 'John Doe',
+    bio: 'Photographer | Traveler | Dreamer',
+    followers: 1200,
+    following: 300,
+    posts: [
+      {
+        id: '1',
+        username: 'john_doe',
+        avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+        image: 'https://plus.unsplash.com/premium_photo-1663039978729-6f6775725f89?q=80&w=3538&auto=format&fit=crop',
+        caption: 'Enjoying the beautiful outdoors!',
+        likes: 15,
+        comments: [
+          { id: 'c1', text: 'Looks amazing!', likes: 3 },
+          { id: 'c2', text: 'Wish I was there!', likes: 2 },
+        ],
+        isVerified: true,
+        timeAgo: '34 min',
+      },
+    ],
+  },
+  {
+    id: '2',
+    username: 'jane_doe',
+    avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
+    name: 'Jane Doe',
+    bio: 'City explorer and coffee lover ☕',
+    followers: 800,
+    following: 150,
+    posts: [
+      {
+        id: '2',
+        username: 'jane_doe',
+        avatar: 'https://randomuser.me/api/portraits/women/2.jpg',
+        video: 'https://assets.mixkit.co/g4zty141nd86zf5hk0d2uxrdqwcg',
+        caption: 'City vibes!',
+        likes: 20,
+        comments: [
+          { id: 'c3', text: 'Love the view!', likes: 5 },
+          { id: 'c4', text: 'Great shot!', likes: 4 },
+        ],
+        isVerified: false,
+        timeAgo: '1h',
+      },
+    ],
+  },
+];
+
 export const mockPosts: Post[] = [
   {
     id: '1',

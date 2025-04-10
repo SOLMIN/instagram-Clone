@@ -23,6 +23,7 @@ import {
   PostButton,
   Comment as CommentStyled,
 } from './Home.styles';
+import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const posts = useSelector((state: RootState) => state.posts.posts);
@@ -62,7 +63,9 @@ const Home: React.FC = () => {
           <PostHeader>
             <Avatar src={post.avatar} alt={`${post.username}'s avatar`} />
             <UsernameContainer>
-              <Username>{post.username}</Username>
+              <Link to={`/profile/${post.username}`}>
+                <Username>{post.username}</Username>
+              </Link>
               {post.isVerified && <VerifiedBadge aria-label="Verified account">✔</VerifiedBadge>}
             </UsernameContainer>
             <TimeAgo>{post.timeAgo}</TimeAgo>
@@ -84,7 +87,9 @@ const Home: React.FC = () => {
           </PostFooter>
           <CaptionContainer>
             <UsernameContainer>
-              <Username>{post.username}</Username>
+              <Link to={`/profile/${post.username}`}>
+                <Username>{post.username}</Username>
+              </Link>
               {post.isVerified && <VerifiedBadge aria-label="Verified account">✔</VerifiedBadge>}
             </UsernameContainer>
             <CaptionText>{post.caption}</CaptionText>
