@@ -1,113 +1,95 @@
-/** @jsxImportSource @emotion/react */
-import React, { useState } from 'react';
-import { RootState, addComment, likePost, likeComment } from '../store/store'; // Adjust the path based on where your Redux store is defined
-import { useSelector, useDispatch } from 'react-redux';
-import styled from '@emotion/styled'; 
-import { Post, CommentType } from './Home.type';
-
-
-const Container = styled.div`
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-`;
-
-const PostCard = styled.div`
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  padding: 10px;
-`;
-
-const Avatar = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-`;
-
-const PostHeader = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-
-const PostImage = styled.img`
-  width: 100%;
-  border-radius: 8px;
-  margin-bottom: 10px;
-`;
-
-const PostFooter = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Button = styled.button`
-  background: none;
-  border: none;
-  color: #007bff;
-  cursor: pointer;
-`;
-
-const CommentSection = styled.div`
-  margin-top: 10px;
-`;
-
-const Comment = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 5px;
-`;
+import React, { useState, useEffect } from 'react';
+import { RootState } from '../store/store';
+import { useSelector } from 'react-redux';
+import { Post } from '../constants/mockData';
+import {
+  Container,
+  PostCard,
+  Avatar,
+  PostHeader,
+  PostImage,
+  PostFooter,
+  Button,
+  CommentSection,
+  Comment as CommentStyled,
+} from './Home.styles';
 
 const Home: React.FC = () => {
   const posts = useSelector((state: RootState) => state.posts.posts);
-  const dispatch = useDispatch();
-  const [commentText, setCommentText] = useState('');
+  const [visiblePosts, setVisiblePosts] = useState<Post[]>([]);
+  const [postCount, setPostCount] = useState(5); // Number of posts to show initially
 
-  const handleAddComment = (postId: string) => {
-    if (commentText.trim()) {
-      dispatch(addComment({ postId, text: commentText }));
-      setCommentText('');
+  // Load initial posts
+  useEffect(() => {
+    setVisiblePosts(posts.slice(0, postCount));
+  }, [postCount, posts]);
+
+  // Handle infinite scroll
+  const handleScroll = () => {
+    if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight) {
+      setPostCount((prevCount) => prevCount + 5); // Load 5 more posts
     }
   };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <Container>
       <h1>Instagram Clone</h1>
-      {posts.map((post: Post) => (
+      {visiblePosts.map((post: Post) => (
         <PostCard key={post.id}>
           <PostHeader>
-            <Avatar src={post.avatar} alt="Avatar" />
+            <Avatar src={post.avatar} alt={`${post.username}'s avatar`} />
             <strong>{post.username}</strong>
           </PostHeader>
-          <PostImage src={post.image} alt="Post" />
+          {post.image && <PostImage src={post.image} alt={post.caption} />}
+          {post.video && (
+            <video controls autoPlay loop muted width="100%" style={{ borderRadius: '8px', marginBottom: '10px' }}>
+              <source src={post.video} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          )}
           <p>{post.caption}</p>
           <PostFooter>
-            <Button onClick={() => dispatch(likePost(post.id))}>❤️ {post.likes}</Button>
+            <LikeButton
+              initialLikes={post.likes}
+              ariaLabel={`Like post by ${post.username}`}
+            />
             <span>{post.comments.length} comments</span>
           </PostFooter>
           <CommentSection>
-            {post.comments.map((comment: CommentType) => (
-              <Comment key={comment.id}>
+            {post.comments.map((comment) => (
+              <CommentStyled key={comment.id}>
                 <span>{comment.text}</span>
-                <Button onClick={() => dispatch(likeComment({ postId: post.id, commentId: comment.id }))}>
-                  ❤️ {comment.likes}
-                </Button>
-              </Comment>
+                <LikeButton
+                  initialLikes={comment.likes}
+                  ariaLabel={`Like comment: "${comment.text}"`}
+                />
+              </CommentStyled>
             ))}
-            <input
-              type="text"
-              placeholder="Add a comment..."
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-            />
-            <Button onClick={() => handleAddComment(post.id)}>Post</Button>
           </CommentSection>
         </PostCard>
       ))}
     </Container>
+  );
+};
+
+const LikeButton: React.FC<{ initialLikes: number; ariaLabel: string }> = ({ initialLikes, ariaLabel }) => {
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(initialLikes);
+
+  const handleLikeToggle = () => {
+    setIsLiked(!isLiked);
+    setLikeCount((prevCount) => (isLiked ? prevCount - 1 : prevCount + 1));
+  };
+
+  return (
+    <Button onClick={handleLikeToggle} aria-label={ariaLabel}>
+      {isLiked ? '❤️' : '🤍'} {likeCount}
+    </Button>
   );
 };
 
