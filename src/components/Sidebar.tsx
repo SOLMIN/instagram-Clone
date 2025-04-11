@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
-import { useSelector } from 'react-redux'; // Assuming you're using Redux for state management
-import { RootState } from '../store/store'; // Adjust the import path based on your project structure
+import { useSelector, useDispatch } from 'react-redux'; // Updated import to include useDispatch
+import { RootState, addPost } from '../store/store'; // Adjust the import path based on your project structure
 
 // Import icons from react-icons
-import { FaHome,FaFacebookMessenger } from 'react-icons/fa';
+import { FaHome, FaFacebookMessenger } from 'react-icons/fa';
 import { MdOutlineAutoAwesome } from 'react-icons/md';
 import { BsChatDots } from 'react-icons/bs';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
@@ -13,7 +13,7 @@ import { IoSearch } from "react-icons/io5";
 import { RiHeartAdd2Line } from "react-icons/ri";
 import { CgAddR } from "react-icons/cg";
 import { MdOutlineExplore } from "react-icons/md";
-
+import CreatePostModal from './CreatePostModal';
 
 const SidebarContainer = styled.div`
   width: 220px;
@@ -125,6 +125,30 @@ const BottomNavContainer = styled.div`
   }
 `;
 
+const NavButton = styled.button`
+  display: flex; /* Use flexbox for alignment */
+  align-items: center; /* Vertically center icon and text */
+  padding: 12px;
+  background: none;
+  border: none;
+  text-decoration: none;
+  color: #333;
+  font-size: 20px;
+  margin-bottom: 2px;
+  cursor: pointer;
+
+  &:hover {
+    color: #007bff;
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column; /* Stack icon and text on mobile */
+    font-size: 12px; /* Smaller font size for mobile */
+    padding: 10px;
+    color: #666;
+  }
+`;
+
 // Define navigation items
 const navItems = [
   { to: '/', icon: <FaHome />, text: 'Home', hideOnMobile: false },
@@ -132,7 +156,6 @@ const navItems = [
   { to: '/explore', icon: <MdOutlineExplore />, text: 'Explore', hideOnMobile: false },
   { to: '/messages', icon: <FaFacebookMessenger />, text: 'Messages', hideOnMobile: false },
   { to: '/notifications', icon: <RiHeartAdd2Line />, text: 'Notifications', hideOnMobile: false },
-  { to: '/create', icon: <CgAddR />, text: 'Create', hideOnMobile: false },
 ];
 
 const bottomNavItems = [
@@ -144,38 +167,68 @@ const bottomNavItems = [
 const Sidebar: React.FC = () => {
   // Get the logged-in user's avatar from Redux or context
   const loggedInUser = useSelector((state: RootState) => state.user);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleCreatePost = (image: string, caption: string) => {
+    const newPost = {
+      id: `${Date.now()}`, // Unique ID based on timestamp
+      username: loggedInUser.username, // Use the logged-in user's username
+      avatar: loggedInUser.avatar, // Use the logged-in user's avatar
+      image,
+      caption,
+      likes: 0,
+      comments: [],
+      isVerified: false,
+      timeAgo: 'Just now',
+    };
+    dispatch(addPost(newPost)); // Dispatch the action to add the post
+    setIsModalOpen(false); // Close the modal
+  };
 
   return (
-    <SidebarContainer>
-      <Logo>Instagram</Logo>
-      {/* Main Navigation Items */}
-      {navItems.map((item) => (
-        <NavItem key={item.to} to={item.to} hideOnMobile={item.hideOnMobile}>
-          <Icon>{item.icon}</Icon>
-          <NavText>{item.text}</NavText>
-        </NavItem>
-      ))}
-      {/* Profile Navigation Item */}
-      <NavItem to={`/profile/${loggedInUser.username}`} hideOnMobile={false}>
-        <Icon isAvatar>
-          <img
-            src={loggedInUser.avatar}
-            alt="User Avatar"
-            style={{ width: '100%', height: '100%' }}
-          />
-        </Icon>
-        <NavText>Profile</NavText>
-      </NavItem>
-      {/* Bottom Navigation Items */}
-      <BottomNavContainer>
-        {bottomNavItems.map((item) => (
+    <>
+      <SidebarContainer>
+        <Logo>Instagram</Logo>
+        {/* Main Navigation Items */}
+        {navItems.map((item) => (
           <NavItem key={item.to} to={item.to} hideOnMobile={item.hideOnMobile}>
             <Icon>{item.icon}</Icon>
             <NavText>{item.text}</NavText>
           </NavItem>
         ))}
-      </BottomNavContainer>
-    </SidebarContainer>
+        {/* Create Navigation Item */}
+        <NavButton onClick={() => setIsModalOpen(true)}>
+        <Icon>
+          <CgAddR />
+        </Icon>
+        <NavText>Create</NavText>
+      </NavButton>
+        {/* Profile Navigation Item */}
+        <NavItem to={`/profile/${loggedInUser.username}`} hideOnMobile={false}>
+          <Icon isAvatar>
+            <img
+              src={loggedInUser.avatar}
+              alt="User Avatar"
+              style={{ width: '100%', height: '100%' }}
+            />
+          </Icon>
+          <NavText>Profile</NavText>
+        </NavItem>
+        {/* Bottom Navigation Items */}
+        <BottomNavContainer>
+          {bottomNavItems.map((item) => (
+            <NavItem key={item.to} to={item.to} hideOnMobile={item.hideOnMobile}>
+              <Icon>{item.icon}</Icon>
+              <NavText>{item.text}</NavText>
+            </NavItem>
+          ))}
+        </BottomNavContainer>
+      </SidebarContainer>
+
+      {/* Create Post Modal */}
+      {isModalOpen && <CreatePostModal onClose={() => setIsModalOpen(false)} onSubmit={handleCreatePost} />}
+    </>
   );
 };
 

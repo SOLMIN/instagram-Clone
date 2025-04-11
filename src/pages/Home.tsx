@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { RootState, addComment } from '../store/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { Post, User, mockUsers } from '../constants/mockData'; // Import mockUsers
+import { addComment, RootState } from '../store/store'; // Import the RootState type
+import { mockPosts, Post, mockUsers } from '../constants/mockData'; // Import mockPosts and mockUsers
 import Stories from '../components/Stories'; // Import the Stories component
+import CreatePostModal from '../components/CreatePostModal'; // Import the CreatePostModal component
 import {
   Container,
   PostCard,
@@ -27,9 +28,10 @@ import {
 import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
-  const posts = useSelector((state: RootState) => state.posts.posts);
+  const posts = useSelector((state: RootState) => state.posts.posts); // Fetch posts from Redux store
   const [visiblePosts, setVisiblePosts] = useState<Post[]>([]);
   const [commentText, setCommentText] = useState('');
+  const [postCount, setPostCount] = useState(5); // Number of posts to show initially
   const dispatch = useDispatch();
   const handleAddComment = (postId: string) => {
     if (commentText.trim()) {
@@ -37,8 +39,6 @@ const Home: React.FC = () => {
       setCommentText('');
     }
   };
-  const [postCount, setPostCount] = useState(5); // Number of posts to show initially
-
   // Load initial posts
   useEffect(() => {
     setVisiblePosts(posts.slice(0, postCount));
@@ -52,6 +52,10 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
+    setVisiblePosts(posts.slice(0, 5)); // Update visiblePosts whenever posts change
+  }, [posts]);
+
+  useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -63,7 +67,7 @@ const Home: React.FC = () => {
 
       <Container>
         {visiblePosts.length === 0 && <p>No posts available</p>}
-        {visiblePosts.map((post: Post) => (
+        {visiblePosts.map((post) => (
           <PostCard key={post.id}>
             <PostHeader>
               <Avatar src={post.avatar} alt={`${post.username}'s avatar`} />

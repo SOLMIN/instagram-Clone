@@ -33,10 +33,13 @@ const postsSlice = createSlice({
       const comment = post?.comments.find((c) => c.id === action.payload.commentId);
       if (comment) comment.likes++;
     },
+    addPost(state, action: PayloadAction<Post>) {
+      state.posts.unshift(action.payload); // Add the new post to the top of the list
+    },
   },
 });
 
-export const { likePost, addComment, likeComment } = postsSlice.actions;
+export const { likePost, addComment, likeComment, addPost } = postsSlice.actions;
 
 const store = configureStore({
   reducer: {
