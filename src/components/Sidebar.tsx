@@ -4,6 +4,14 @@ import styled from '@emotion/styled';
 import { useSelector } from 'react-redux'; // Assuming you're using Redux for state management
 import { RootState } from '../store/store'; // Adjust the import path based on your project structure
 
+// Import icons from react-icons
+import { FaHome, FaSearch, FaCompass, FaEnvelope, FaPlus, FaUser } from 'react-icons/fa';
+import { MdOutlineAutoAwesome } from 'react-icons/md';
+import { BsChatDots } from 'react-icons/bs';
+import { HiOutlineDotsHorizontal } from 'react-icons/hi';
+import { IoSearch } from "react-icons/io5";
+
+
 const SidebarContainer = styled.div`
   width: 220px;
   height: 100vh;
@@ -41,11 +49,11 @@ const Logo = styled.h1`
   padding-bottom: 20px;
 
   @media (max-width: 768px) {
-    display: none; /* Hide the logo on mobile */
+    display: none;
   }
 `;
 
-const NavItem = styled(Link) <{ hideOnMobile?: boolean }>`
+const NavItem = styled(Link)<{ hideOnMobile?: boolean }>`
   display: flex; /* Use flexbox for alignment */
   align-items: center; /* Vertically center icon and text */
   padding: 12px;
@@ -65,8 +73,8 @@ const NavItem = styled(Link) <{ hideOnMobile?: boolean }>`
     color: #666;
 
     ${(props) =>
-    props.hideOnMobile &&
-    `
+      props.hideOnMobile &&
+      `
       display: none; /* Hide non-essential icons on mobile */
     `}
   }
@@ -116,17 +124,17 @@ const BottomNavContainer = styled.div`
 
 // Define navigation items
 const navItems = [
-  { to: '/', icon: '🏠', text: 'Home', hideOnMobile: false },
-  { to: '/search', icon: '🔍', text: 'Search', hideOnMobile: false },
-  { to: '/explore', icon: '🧭', text: 'Explore', hideOnMobile: false },
-  { to: '/messages', icon: '💬', text: 'Messages', hideOnMobile: false },
-  { to: '/create', icon: '➕', text: 'Create', hideOnMobile: false },
+  { to: '/', icon: <FaHome />, text: 'Home', hideOnMobile: false },
+  { to: '/search', icon: <IoSearch />, text: 'Search', hideOnMobile: false },
+  { to: '/explore', icon: <FaCompass />, text: 'Explore', hideOnMobile: false },
+  { to: '/messages', icon: <FaEnvelope />, text: 'Messages', hideOnMobile: false },
+  { to: '/create', icon: <FaPlus />, text: 'Create', hideOnMobile: false },
 ];
 
 const bottomNavItems = [
-  { to: '/ai-studio', icon: '✨', text: 'AI Studio', hideOnMobile: true },
-  { to: '/threads', icon: '🧵', text: 'Threads', hideOnMobile: true },
-  { to: '/more', icon: '⋮', text: 'More', hideOnMobile: true },
+  { to: '/ai-studio', icon: <MdOutlineAutoAwesome />, text: 'AI Studio', hideOnMobile: true },
+  { to: '/threads', icon: <BsChatDots />, text: 'Threads', hideOnMobile: true },
+  { to: '/more', icon: <HiOutlineDotsHorizontal />, text: 'More', hideOnMobile: true },
 ];
 
 const Sidebar: React.FC = () => {
