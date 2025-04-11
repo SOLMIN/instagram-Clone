@@ -5,11 +5,14 @@ import { useSelector } from 'react-redux'; // Assuming you're using Redux for st
 import { RootState } from '../store/store'; // Adjust the import path based on your project structure
 
 // Import icons from react-icons
-import { FaHome, FaSearch, FaCompass, FaEnvelope, FaPlus, FaUser } from 'react-icons/fa';
+import { FaHome,FaFacebookMessenger } from 'react-icons/fa';
 import { MdOutlineAutoAwesome } from 'react-icons/md';
 import { BsChatDots } from 'react-icons/bs';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import { IoSearch } from "react-icons/io5";
+import { RiHeartAdd2Line } from "react-icons/ri";
+import { CgAddR } from "react-icons/cg";
+import { MdOutlineExplore } from "react-icons/md";
 
 
 const SidebarContainer = styled.div`
@@ -126,9 +129,10 @@ const BottomNavContainer = styled.div`
 const navItems = [
   { to: '/', icon: <FaHome />, text: 'Home', hideOnMobile: false },
   { to: '/search', icon: <IoSearch />, text: 'Search', hideOnMobile: false },
-  { to: '/explore', icon: <FaCompass />, text: 'Explore', hideOnMobile: false },
-  { to: '/messages', icon: <FaEnvelope />, text: 'Messages', hideOnMobile: false },
-  { to: '/create', icon: <FaPlus />, text: 'Create', hideOnMobile: false },
+  { to: '/explore', icon: <MdOutlineExplore />, text: 'Explore', hideOnMobile: false },
+  { to: '/messages', icon: <FaFacebookMessenger />, text: 'Messages', hideOnMobile: false },
+  { to: '/notifications', icon: <RiHeartAdd2Line />, text: 'Notifications', hideOnMobile: false },
+  { to: '/create', icon: <CgAddR />, text: 'Create', hideOnMobile: false },
 ];
 
 const bottomNavItems = [

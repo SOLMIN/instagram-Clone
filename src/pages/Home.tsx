@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { RootState, addComment } from '../store/store';
 import { useSelector, useDispatch } from 'react-redux';
-import { Post } from '../constants/mockData';
+import { Post, User, mockUsers } from '../constants/mockData'; // Import mockUsers
+import Stories from '../components/Stories'; // Import the Stories component
 import {
   Container,
   PostCard,
@@ -24,7 +25,6 @@ import {
   Comment as CommentStyled,
 } from './Home.styles';
 import { Link } from 'react-router-dom';
-import Sidebar from '../components/Sidebar';
 
 const Home: React.FC = () => {
   const posts = useSelector((state: RootState) => state.posts.posts);
@@ -57,9 +57,12 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
+      {/* Stories Component */}
+      <Stories users={mockUsers} />
+
       <Container>
-        <h1>Instagram Clone</h1>
+        {/* <h1>Instagram Clone</h1> */}
         {visiblePosts.map((post: Post) => (
           <PostCard key={post.id}>
             <PostHeader>
