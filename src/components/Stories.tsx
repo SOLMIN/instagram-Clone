@@ -54,6 +54,10 @@ const StoriesContainer = styled.div`
   &::-webkit-scrollbar {
     display: none; /* Hide scrollbar for better UI */
   }
+
+  @media (max-width: 768px) {
+    max-width: 380px; /* Limit the width */
+  }
 `;
 
 const Story = styled(Link)`
