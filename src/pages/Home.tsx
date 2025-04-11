@@ -24,7 +24,7 @@ import {
   Comment as CommentStyled,
 } from './Home.styles';
 import { Link } from 'react-router-dom';
-import Sidebar from './Sidebar';
+import Sidebar from '../components/Sidebar';
 
 const Home: React.FC = () => {
   const posts = useSelector((state: RootState) => state.posts.posts);

@@ -1,6 +1,6 @@
 // filepath: /Users/solmin.daudy/instagram-Clone-1/src/components/Layout.tsx
 import React from 'react';
-import Sidebar from '../pages/Sidebar';
+import Sidebar from './Sidebar';
 import styled from '@emotion/styled';
 
 const LayoutContainer = styled.div`

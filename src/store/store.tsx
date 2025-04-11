@@ -1,5 +1,6 @@
 import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { mockPosts, Post } from '../constants/mockData';
+import userReducer from './userSlice';
 
 interface PostsState {
   posts: Post[];
@@ -40,6 +41,7 @@ export const { likePost, addComment, likeComment } = postsSlice.actions;
 const store = configureStore({
   reducer: {
     posts: postsSlice.reducer,
+    user: userReducer,
   },
 });
 
