@@ -62,7 +62,7 @@ const Home: React.FC = () => {
       <Stories users={mockUsers} />
 
       <Container>
-        {/* <h1>Instagram Clone</h1> */}
+        {visiblePosts.length === 0 && <p>No posts available</p>}
         {visiblePosts.map((post: Post) => (
           <PostCard key={post.id}>
             <PostHeader>

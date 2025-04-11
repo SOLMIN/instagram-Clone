@@ -3,9 +3,12 @@ import { useParams } from 'react-router-dom';
 import { mockUsers } from '../constants/mockData';
 import {
   ProfileContainer,
+  ProfileHeader,
   AvatarLarge,
   ProfileDetails,
   ProfileStats,
+  ProfileName,
+  ProfileBio,
   PostsGrid,
   PostThumbnail,
   VideoThumbnail,
@@ -21,18 +24,29 @@ const Profile: React.FC = () => {
 
   return (
     <ProfileContainer>
-      <AvatarLarge src={user.avatar} alt={`${user.name}'s avatar`} />
-      <ProfileDetails>
-        <h2>{user.name}</h2>
-        <p>{user.bio}</p>
-        <ProfileStats>
-          <span>{user.posts.length} Posts</span>
-          <span>{user.followers} Followers</span>
-          <span>{user.following} Following</span>
-        </ProfileStats>
-      </ProfileDetails>
+      {/* Profile Header */}
+      <ProfileHeader>
+        <AvatarLarge src={user.avatar} alt={`${user.name}'s avatar`} />
+        <ProfileDetails>
+          <ProfileName>{user.name}</ProfileName>
+          <ProfileBio>{user.bio}</ProfileBio>
+          <ProfileStats>
+            <span>
+              <strong>{user.posts.length}</strong> Posts
+            </span>
+            <span>
+              <strong>{user.followers}</strong> Followers
+            </span>
+            <span>
+              <strong>{user.following}</strong> Following
+            </span>
+          </ProfileStats>
+        </ProfileDetails>
+      </ProfileHeader>
+
+      {/* Posts Grid */}
       <PostsGrid>
-        {user.posts.map((post) => (
+        {user.posts.map((post) =>
           post.video ? (
             <VideoThumbnail key={post.id} controls>
               <source src={post.video} type="video/mp4" />
@@ -41,7 +55,7 @@ const Profile: React.FC = () => {
           ) : (
             <PostThumbnail key={post.id} src={post.image} alt={post.caption} />
           )
-        ))}
+        )}
       </PostsGrid>
     </ProfileContainer>
   );
