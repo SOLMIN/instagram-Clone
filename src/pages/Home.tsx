@@ -24,6 +24,7 @@ import {
   Comment as CommentStyled,
 } from './Home.styles';
 import { Link } from 'react-router-dom';
+import Sidebar from './Sidebar';
 
 const Home: React.FC = () => {
   const posts = useSelector((state: RootState) => state.posts.posts);
@@ -56,67 +57,69 @@ const Home: React.FC = () => {
   }, []);
 
   return (
-    <Container>
-      <h1>Instagram Clone</h1>
-      {visiblePosts.map((post: Post) => (
-        <PostCard key={post.id}>
-          <PostHeader>
-            <Avatar src={post.avatar} alt={`${post.username}'s avatar`} />
-            <UsernameContainer>
-              <Link to={`/profile/${post.username}`}>
-                <Username>{post.username}</Username>
-              </Link>
-              {post.isVerified && <VerifiedBadge aria-label="Verified account">✔</VerifiedBadge>}
-            </UsernameContainer>
-            <TimeAgo>{post.timeAgo}</TimeAgo>
-          </PostHeader>
-          {post.image && <PostImage src={post.image} alt={post.caption} />}
-          {post.video && (
-            <video controls autoPlay loop muted width="100%" style={{ borderRadius: '8px', marginBottom: '10px' }}>
-              <source src={post.video} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          )}
+    <div style={{ display: 'flex' }}>
+      <Container>
+        <h1>Instagram Clone</h1>
+        {visiblePosts.map((post: Post) => (
+          <PostCard key={post.id}>
+            <PostHeader>
+              <Avatar src={post.avatar} alt={`${post.username}'s avatar`} />
+              <UsernameContainer>
+                <Link to={`/profile/${post.username}`}>
+                  <Username>{post.username}</Username>
+                </Link>
+                {post.isVerified && <VerifiedBadge aria-label="Verified account">✔</VerifiedBadge>}
+              </UsernameContainer>
+              <TimeAgo>{post.timeAgo}</TimeAgo>
+            </PostHeader>
+            {post.image && <PostImage src={post.image} alt={post.caption} />}
+            {post.video && (
+              <video controls autoPlay loop muted width="100%" style={{ borderRadius: '8px', marginBottom: '10px' }}>
+                <source src={post.video} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            )}
 
-          <PostFooter>
-            <LikeButton
-              initialLikes={post.likes}
-              ariaLabel={`Like post by ${post.username}`}
-            />
-            <CommentsCount>{post.comments.length} comments</CommentsCount>
-          </PostFooter>
-          <CaptionContainer>
-            <UsernameContainer>
-              <Link to={`/profile/${post.username}`}>
-                <Username>{post.username}</Username>
-              </Link>
-              {post.isVerified && <VerifiedBadge aria-label="Verified account">✔</VerifiedBadge>}
-            </UsernameContainer>
-            <CaptionText>{post.caption}</CaptionText>
-          </CaptionContainer>
-          <CommentSection>
-            {post.comments.map((comment) => (
-              <CommentStyled key={comment.id}>
-                <span>{comment.text}</span>
-                <LikeButton
-                  initialLikes={comment.likes}
-                  ariaLabel={`Like comment: "${comment.text}"`}
-                />
-              </CommentStyled>
-            ))}
-            <CommentInputContainer>
-              <CommentInput
-                type="text"
-                placeholder="Add a comment..."
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
+            <PostFooter>
+              <LikeButton
+                initialLikes={post.likes}
+                ariaLabel={`Like post by ${post.username}`}
               />
-              <PostButton onClick={() => handleAddComment(post.id)}>Post</PostButton>
-            </CommentInputContainer>
-          </CommentSection>
-        </PostCard>
-      ))}
-    </Container>
+              <CommentsCount>{post.comments.length} comments</CommentsCount>
+            </PostFooter>
+            <CaptionContainer>
+              <UsernameContainer>
+                <Link to={`/profile/${post.username}`}>
+                  <Username>{post.username}</Username>
+                </Link>
+                {post.isVerified && <VerifiedBadge aria-label="Verified account">✔</VerifiedBadge>}
+              </UsernameContainer>
+              <CaptionText>{post.caption}</CaptionText>
+            </CaptionContainer>
+            <CommentSection>
+              {post.comments.map((comment) => (
+                <CommentStyled key={comment.id}>
+                  <span>{comment.text}</span>
+                  <LikeButton
+                    initialLikes={comment.likes}
+                    ariaLabel={`Like comment: "${comment.text}"`}
+                  />
+                </CommentStyled>
+              ))}
+              <CommentInputContainer>
+                <CommentInput
+                  type="text"
+                  placeholder="Add a comment..."
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                />
+                <PostButton onClick={() => handleAddComment(post.id)}>Post</PostButton>
+              </CommentInputContainer>
+            </CommentSection>
+          </PostCard>
+        ))}
+      </Container>
+    </div>
   );
 };
 

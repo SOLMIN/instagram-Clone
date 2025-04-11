@@ -8,6 +8,7 @@ import {
   ProfileStats,
   PostsGrid,
   PostThumbnail,
+  VideoThumbnail,
 } from './Profile.styles';
 
 const Profile: React.FC = () => {
@@ -32,7 +33,14 @@ const Profile: React.FC = () => {
       </ProfileDetails>
       <PostsGrid>
         {user.posts.map((post) => (
-          <PostThumbnail key={post.id} src={post.image || post.video} alt={post.caption} />
+          post.video ? (
+            <VideoThumbnail key={post.id} controls>
+              <source src={post.video} type="video/mp4" />
+              Your browser does not support the video tag.
+            </VideoThumbnail>
+          ) : (
+            <PostThumbnail key={post.id} src={post.image} alt={post.caption} />
+          )
         ))}
       </PostsGrid>
     </ProfileContainer>
