@@ -18,8 +18,15 @@ const ModalContent = styled.div`
   background: #fff;
   padding: 20px;
   border-radius: 8px;
-  max-width: 500px;
-  width: 90%;
+  width: 100%;
+  height: 100%;
+  max-width: 825px;
+  max-height: 866px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center; /* Center content horizontally */
+  position: relative;
 `;
 
 const CloseButton = styled.button`
@@ -32,12 +39,63 @@ const CloseButton = styled.button`
   cursor: pointer;
 `;
 
-const Input = styled.input`
-  width: 100%;
+const Title = styled.h2`
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+`;
+
+const FileInputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+`;
+
+const FileInputLabel = styled.label`
+  display: inline-block;
+  padding: 10px 20px;
+  background: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
   margin-bottom: 10px;
+
+  &:hover {
+    background: #0056b3;
+  }
+`;
+
+const HiddenFileInput = styled.input`
+  display: none;
+`;
+
+const PreviewImage = styled.img`
+  width: 100%;
+  height: 100%;
+  max-height: 660px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+`;
+
+const InputContainer = styled.div`
+  margin-top: auto; /* Push the input and button to the bottom */
+  display: block;
+  gap: 20px;
+  width: 100%;
+`;
+
+const Input = styled.input`
+  width: 50%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  margin-left: 150px;
 `;
 
 const SubmitButton = styled.button`
@@ -47,6 +105,7 @@ const SubmitButton = styled.button`
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
+  margin-left: 20px;
 
   &:hover {
     background: #0056b3;
@@ -85,16 +144,26 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>&times;</CloseButton>
-        <h2>Create New Post</h2>
-        <Input type="file" accept="image/*" onChange={handleImageChange} />
-        {image && <img src={image} alt="Preview" style={{ width: '100%', marginBottom: '10px' }} />}
-        <Input
-          type="text"
-          placeholder="Write a caption..."
-          value={caption}
-          onChange={(e) => setCaption(e.target.value)}
-        />
-        <SubmitButton onClick={handleSubmit}>Post</SubmitButton>
+        <Title>Create New Post</Title>
+        <FileInputContainer>
+          <FileInputLabel htmlFor="file-upload">Select From Computer</FileInputLabel>
+          <HiddenFileInput
+            id="file-upload"
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+          {image && <PreviewImage src={image} alt="Preview" />}
+        </FileInputContainer>
+        <InputContainer>
+          <Input
+            type="text"
+            placeholder="Write a caption..."
+            value={caption}
+            onChange={(e) => setCaption(e.target.value)}
+          />
+          <SubmitButton onClick={handleSubmit}>Post</SubmitButton>
+        </InputContainer>
       </ModalContent>
     </ModalOverlay>
   );
