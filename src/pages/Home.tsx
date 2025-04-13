@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { addComment, RootState } from '../store/store'; // Import the RootState type
-import { mockPosts, Post, mockUsers } from '../constants/mockData'; // Import mockPosts and mockUsers
-import Stories from '../components/Stories'; // Import the Stories component
+import { AppDispatch } from '../store/store'; // Import AppDispatch type
+import { fetchPosts } from '../store/postSlice'; // Import the fetchPosts thunk
+import { addComment, RootState } from '../store/store'; // Import RootState type
+import Stories from '../components/Stories'; // Import Stories component
 import CreatePostModal from '../components/CreatePostModal'; // Import the CreatePostModal component
+
 import {
   Container,
   PostCard,
@@ -27,22 +29,29 @@ import {
 } from './Home.styles';
 import { Link } from 'react-router-dom';
 
+
 const Home: React.FC = () => {
-  const posts = useSelector((state: RootState) => state.posts.posts); // Fetch posts from Redux store
-  const [visiblePosts, setVisiblePosts] = useState<Post[]>([]);
+
+  const dispatch: AppDispatch = useDispatch();
+  // const dispatch = useDispatch();
+  const { posts, loading, error } = useSelector((state: RootState) => state.posts); // Fetch posts from Redux store
+  const [visiblePosts, setVisiblePosts] = useState(posts.slice(0, 5)); // Show initial 5 posts
   const [commentText, setCommentText] = useState('');
+
   const [postCount, setPostCount] = useState(5); // Number of posts to show initially
-  const dispatch = useDispatch();
   const handleAddComment = (postId: string) => {
     if (commentText.trim()) {
       dispatch(addComment({ postId, text: commentText }));
       setCommentText('');
     }
   };
-  // Load initial posts
+  useEffect(() => {
+    dispatch(fetchPosts()); // Fetch posts when the component mounts
+  }, [dispatch]);
+
   useEffect(() => {
     setVisiblePosts(posts.slice(0, postCount));
-  }, [postCount, posts]);
+  }, [posts, postCount]);
 
   // Handle infinite scroll
   const handleScroll = () => {
@@ -52,18 +61,22 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    setVisiblePosts(posts.slice(0, 5)); // Update visiblePosts whenever posts change
-  }, [posts]);
-
-  useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  if (loading) {
+    return <p>Loading posts...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       {/* Stories Component */}
-      <Stories/>
+      <Stories />
 
       <Container>
         {visiblePosts.length === 0 && <p>No posts available</p>}

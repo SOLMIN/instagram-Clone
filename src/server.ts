@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { PostModel } = require('./services/postService'); // Import PostModel
 require('dotenv').config(); // Load environment variables
 
 const { UserModel } = require('./services/addUsers');
@@ -48,14 +49,37 @@ app.get('/api/users', async (req: any, res: any): Promise<void> => {
   }
 });
 
-// Add Mock Users API
-app.post('/api/add-mock-users', async (req: any, res: any): Promise<void> => {
+// Add Post API
+app.post('/api/add-post', async (req: any, res: any): Promise<void> => {
   try {
-    await addMockUsers(); // Call the addMockUsers function
-    res.status(200).json({ message: 'Mock users added successfully!' });
+    const post = req.body;
+
+    // Validate request body
+    if (!post || !post.id || !post.username || !post.caption) {
+      return res.status(400).json({ error: 'Post data is incomplete' });
+    }
+
+    // Create a new post
+    const newPost = new PostModel(post);
+
+    // Save the post to the database
+    await newPost.save();
+
+    res.status(200).json({ message: 'Post added successfully!', post: newPost });
   } catch (error) {
-    console.error('Error adding mock users:', error);
-    res.status(500).json({ error: 'Failed to add mock users' });
+    console.error('Error adding post:', error);
+    res.status(500).json({ error: 'Failed to add post' });
+  }
+});
+
+// Fetch Posts API
+app.get('/api/posts', async (req: any, res: any): Promise<void> => {
+  try {
+    const posts = await PostModel.find(); // Fetch all posts from the database
+    res.status(200).json(posts); // Send the posts as a JSON response
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    res.status(500).json({ error: 'Failed to fetch posts' });
   }
 });
 

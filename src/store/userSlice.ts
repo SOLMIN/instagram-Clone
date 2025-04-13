@@ -33,8 +33,33 @@ export const fetchUsers = createAsyncThunk<UserState[]>('users/fetchUsers', asyn
   if (!response.ok) {
     throw new Error('Failed to fetch users');
   }
-  return response.json(); // Parse and return the JSON response
+
+  const users = await response.json(); 
+
+  // Filter unique users by `username`
+  const uniqueUsers = users.filter(
+    (user: UserState, index: number, self: UserState[]) =>
+      index === self.findIndex((u) => u.username === user.username) // Ensure unique `username`
+  );
+  console.log('Unique users:', uniqueUsers);
+
+  return uniqueUsers;
 });
+
+export const fetchPosts = async () => {
+  try {
+    const response = await fetch('/api/posts');
+    if (!response.ok) {
+      throw new Error('Failed to fetch posts');
+    }
+    const posts = await response.json();
+    console.log('Fetched posts:', posts);
+    return posts;
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    return [];
+  }
+};
 
 const userSlice = createSlice({
   name: 'users',
