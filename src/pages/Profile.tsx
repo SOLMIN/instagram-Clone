@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { mockUsers } from '../constants/mockData';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store'; // Import RootState type
 import {
   ProfileContainer,
   ProfileHeader,
@@ -21,7 +22,9 @@ import {
 
 const Profile: React.FC = () => {
   const { username } = useParams<{ username: string }>();
-  const user = mockUsers.find((user) => user.username === username);
+  const user = useSelector((state: RootState) =>
+    state.users.users.find((user) => user.username === username)
+  ); // Fetch user from Redux store
 
   const [activeTab, setActiveTab] = useState<'posts' | 'reels' | 'tagged'>('posts');
   const [selectedPost, setSelectedPost] = useState<{ video?: string; image?: string; caption: string } | null>(null);

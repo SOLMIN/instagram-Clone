@@ -63,7 +63,7 @@ const Home: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       {/* Stories Component */}
-      <Stories users={mockUsers} />
+      <Stories/>
 
       <Container>
         {visiblePosts.length === 0 && <p>No posts available</p>}

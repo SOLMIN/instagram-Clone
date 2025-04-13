@@ -1,4 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import { User } from '../constants/mockData';
@@ -95,7 +97,8 @@ interface StoriesProps {
   users: User[];
 }
 
-const Stories: React.FC<StoriesProps> = ({ users }) => {
+const Stories: React.FC = () => {
+  const users = useSelector((state: RootState) => state.users.users); // Access users from Redux
   const containerRef = useRef<HTMLDivElement>(null);
   const [isAtStart, setIsAtStart] = useState(true);
   const [isAtEnd, setIsAtEnd] = useState(false);
@@ -135,12 +138,12 @@ const Stories: React.FC<StoriesProps> = ({ users }) => {
         &lt;
       </LeftButton>
       <StoriesContainer ref={containerRef}>
-        {users.map((user) => (
-          <Story key={user.id} to={`/profile/${user.username}`}>
-            <Avatar src={user.avatar} alt={`${user.username}'s avatar`} />
-            <Username>{user.username}</Username>
-          </Story>
-        ))}
+      {users.map((user) => (
+        <Story key={user.id} to={`/profile/${user.username}`}>
+          <Avatar src={user.avatar} alt={`${user.username}'s avatar`} />
+          <Username>{user.username}</Username>
+        </Story>
+      ))}
       </StoriesContainer>
       <RightButton onClick={scrollRight} disabled={isAtEnd}>
         &gt;

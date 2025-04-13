@@ -167,7 +167,7 @@ const bottomNavItems = [
 
 const Sidebar: React.FC = () => {
   // Get the logged-in user's avatar from Redux or context
-  const loggedInUser = useSelector((state: RootState) => state.user);
+  const loggedInUser = useSelector((state: RootState) => state.users);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
 

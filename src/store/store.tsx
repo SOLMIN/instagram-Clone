@@ -39,21 +39,17 @@ const postsSlice = createSlice({
   },
 });
 
+
 export const { likePost, addComment, likeComment, addPost } = postsSlice.actions;
 
 const store = configureStore({
   reducer: {
     posts: postsSlice.reducer,
-    user: userReducer,
+    users: userReducer,
   },
 });
 
-// Explicitly define RootState to include UserState
-export interface RootState {
-  posts: PostsState;
-  user: UserState;
-}
-
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export default store;
