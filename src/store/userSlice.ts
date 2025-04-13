@@ -1,15 +1,23 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface UserState {
+export interface UserState {
   id: string;
   username: string;
   avatar: string;
+  name: string;
+  bio: string;
+  followers: number;
+  following: number;
 }
 
 const initialState: UserState = {
-  id: '1',
-  username: 'john_doe',
-  avatar: 'https://randomuser.me/api/portraits/men/1.jpg',
+  id: '',
+  username: '',
+  avatar: '',
+  name: '',
+  bio: '',
+  followers: 0,
+  following: 0,
 };
 
 const userSlice = createSlice({
@@ -19,8 +27,11 @@ const userSlice = createSlice({
     setUser(state, action: PayloadAction<UserState>) {
       return action.payload;
     },
+    clearUser() {
+      return initialState;
+    },
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, clearUser } = userSlice.actions;
 export default userSlice.reducer;

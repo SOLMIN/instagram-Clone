@@ -1,32 +1,26 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "module": "esnext",
-    "jsx": "react-jsx",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "allowSyntheticDefaultImports": true,
-    "noFallthroughCasesInSwitch": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true
+    "target": "ES2020", // Updated to a more modern target
+    "module": "commonjs", // Use CommonJS for better Node.js compatibility
+    "jsx": "react-jsx", // Keep React JSX support
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // Allow default imports from CommonJS modules
+    "skipLibCheck": true, // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true, // Enforce consistent casing in imports
+    "outDir": "./dist", // Output directory for compiled files
+    "rootDir": "./src", // Root directory for source files
+    "lib": ["dom", "dom.iterable", "esnext"], // Include DOM and modern JavaScript libraries
+    "allowJs": true, // Allow JavaScript files to be compiled
+    "allowSyntheticDefaultImports": true, // Allow default imports from modules with no default export
+    "noFallthroughCasesInSwitch": true, // Ensure all switch cases are handled
+    "moduleResolution": "node", // Use Node.js module resolution
+    "resolveJsonModule": true, // Allow importing JSON files
+    "isolatedModules": true, // Ensure each file can be transpiled independently
+    "noEmit": false, // Enable emitting compiled JavaScript files
+    "declaration": true, // Generate `.d.ts` files for TypeScript definitions
+    "declarationMap": true, // Generate source maps for `.d.ts` files
+    "sourceMap": true // Generate source maps for debugging
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": ["src/**/*"], // Include all files in the `src` directory
+  "exclude": ["node_modules", "dist"] // Exclude `node_modules` and `dist` directories
 }

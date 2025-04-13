@@ -1,6 +1,6 @@
 import { configureStore, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { mockPosts, Post } from '../constants/mockData';
-import userReducer from './userSlice';
+import userReducer, { UserState } from './userSlice'; // Import UserState
 
 interface PostsState {
   posts: Post[];
@@ -48,7 +48,12 @@ const store = configureStore({
   },
 });
 
-export type RootState = ReturnType<typeof store.getState>;
+// Explicitly define RootState to include UserState
+export interface RootState {
+  posts: PostsState;
+  user: UserState;
+}
+
 export type AppDispatch = typeof store.dispatch;
 
 export default store;
