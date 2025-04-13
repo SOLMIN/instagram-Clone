@@ -5,14 +5,15 @@ import { useSelector, useDispatch } from 'react-redux'; // Updated import to inc
 import { RootState, addPost } from '../store/store'; // Adjust the import path based on your project structure
 
 // Import icons from react-icons
-import { FaHome, FaFacebookMessenger } from 'react-icons/fa';
-import { MdOutlineAutoAwesome } from 'react-icons/md';
-import { BsChatDots } from 'react-icons/bs';
-import { HiOutlineDotsHorizontal } from 'react-icons/hi';
-import { IoSearch } from "react-icons/io5";
-import { RiHeartAdd2Line } from "react-icons/ri";
-import { CgAddR } from "react-icons/cg";
-import { MdOutlineExplore } from "react-icons/md";
+const FaHome = require('react-icons/fa').FaHome;
+const IoSearch = require('react-icons/io5').IoSearch;
+const MdOutlineExplore = require('react-icons/md').MdOutlineExplore;
+const FaFacebookMessenger = require('react-icons/fa').FaFacebookMessenger;
+const RiHeartAdd2Line = require('react-icons/ri').RiHeartAdd2Line;
+const MdOutlineAutoAwesome = require('react-icons/md').MdOutlineAutoAwesome;
+const BsChatDots = require('react-icons/bs').BsChatDots;
+const CgAddR =  require('react-icons/cg').CgAddR;
+const HiOutlineDotsHorizontal = require('react-icons/hi').HiOutlineDotsHorizontal;
 import CreatePostModal from './CreatePostModal';
 
 const SidebarContainer = styled.div`
