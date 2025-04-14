@@ -1,7 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { PostModel } from '../services/postService';
 
-const router = Router();
+const router: Router = Router(); // Explicitly annotate the type
+
 
 // Add Post
 router.post('/add', async (req: Request, res: Response) => {

@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { UserModel } from '../services/addUsers';
 
-const router = Router();
+const router: Router = Router(); // Explicitly annotate the type
 
 // Fetch Users
 router.get('/', async (req: Request, res: Response) => {
