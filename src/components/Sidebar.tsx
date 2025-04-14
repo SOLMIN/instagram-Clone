@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux'; // Updated import to include useDispatch
 import { RootState } from '../store/store'; // Adjust the import path based on your project structure
-import {addPost} from '../slice/postSlice'; // Import addPost action
+import { Post } from '../constants/mockData';
+// import {addPost} from '../slice/postSlice'; // Import addPost action
 
 // Import icons from react-icons
 const FaHome = require('react-icons/fa').FaHome;
@@ -177,6 +178,28 @@ const Sidebar: React.FC = () => {
     dispatch(clearLoggedInUser()); // Dispatch the logout action
   };
 
+  const addPost = async (postData: Post) => {
+    try {
+      console.log('Adding post:', postData);
+      const response = await fetch('/api/posts/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(postData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add post');
+      }
+
+      const result = await response.json();
+      console.log('Post added successfully:', result);
+    } catch (error) {
+      console.error('Error adding post:', error);
+    }
+  };
+
   const handleCreatePost = (image: string, caption: string) => {
     const newPost = {
       id: `${Date.now()}`, // Unique ID based on timestamp
@@ -189,8 +212,8 @@ const Sidebar: React.FC = () => {
       isVerified: false,
       timeAgo: 'Just now',
     };
-    dispatch(addPost(newPost)); // Dispatch the action to add the post
-    setIsModalOpen(false); // Close the modal
+    addPost(newPost);
+    setIsModalOpen(false);
   };
 
   return (

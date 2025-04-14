@@ -10,7 +10,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(express.json());
+app.use(express.json({ limit: '10mb' })); // Increase the limit to 10MB
+app.use(express.urlencoded({ extended: true, limit: '10mb' })); // For URL-encoded data
 
 // Connect to MongoDB
 mongoose.set('strictQuery', false); // Disable deprecated warnings
