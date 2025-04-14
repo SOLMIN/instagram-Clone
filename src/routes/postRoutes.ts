@@ -7,17 +7,20 @@ const router: Router = Router(); // Explicitly annotate the type
 // Add Post
 router.post('/add', async (req: Request, res: Response) => {
   try {
-    const { id, username, caption } = req.body;
+    const post = req.body;
 
-    // Validate required fields
-    if (!id || !username || !caption) {
+    // Validate request body
+    if (!post || !post.id || !post.username || !post.caption) {
       return res.status(400).json({ error: 'Post data is incomplete' });
     }
 
-    // Create and save the post directly
-    const newPost = await PostModel.create({ id, username, caption });
+    // Create a new post
+    const newPost = new PostModel(post);
 
-    res.status(201).json({ message: 'Post added successfully!', post: newPost });
+    // Save the post to the database
+    await newPost.save();
+
+    res.status(200).json({ message: 'Post added successfully!', post: newPost });
   } catch (error) {
     console.error('Error adding post:', error);
     res.status(500).json({ error: 'Failed to add post' });
