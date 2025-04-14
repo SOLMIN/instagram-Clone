@@ -4,9 +4,6 @@ import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux'; // Updated import to include useDispatch
 import { RootState } from '../store/store'; // Adjust the import path based on your project structure
 import { Post } from '../constants/mockData';
-// import {addPost} from '../slice/postSlice'; // Import addPost action
-
-// Import icons from react-icons
 const FaHome = require('react-icons/fa').FaHome;
 const IoSearch = require('react-icons/io5').IoSearch;
 const MdOutlineExplore = require('react-icons/md').MdOutlineExplore;
@@ -19,6 +16,7 @@ const IoIosLogOut =  require("react-icons/io").IoIosLogOut;
 const HiOutlineDotsHorizontal = require('react-icons/hi').HiOutlineDotsHorizontal;
 import CreatePostModal from './CreatePostModal';
 import { clearLoggedInUser } from '../slice/userSlice';
+import { addPost } from '../slice/postSlice';
 
 const SidebarContainer = styled.div`
   width: 220px;
@@ -178,7 +176,7 @@ const Sidebar: React.FC = () => {
     dispatch(clearLoggedInUser()); // Dispatch the logout action
   };
 
-  const addPost = async (postData: Post) => {
+  const addPostToFeed = async (postData: Post) => {
     try {
       console.log('Adding post:', postData);
       const response = await fetch('/api/posts/add', {
@@ -195,6 +193,7 @@ const Sidebar: React.FC = () => {
 
       const result = await response.json();
       console.log('Post added successfully:', result);
+      dispatch(addPost(result.post));
     } catch (error) {
       console.error('Error adding post:', error);
     }
@@ -212,7 +211,7 @@ const Sidebar: React.FC = () => {
       isVerified: false,
       timeAgo: 'Just now',
     };
-    addPost(newPost);
+    addPostToFeed(newPost);
     setIsModalOpen(false);
   };
 

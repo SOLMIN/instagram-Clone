@@ -18,6 +18,7 @@ const postSchema = new mongoose.Schema({
   ],
   isVerified: { type: Boolean, default: false },
   timeAgo: { type: String, required: true },
+  Timestamp: { type: Date, default: Date.now },
 });
 
 // Create Post Model

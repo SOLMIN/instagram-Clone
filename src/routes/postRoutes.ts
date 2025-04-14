@@ -30,7 +30,7 @@ router.post('/add', async (req: Request, res: Response) => {
 // Fetch Posts
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const posts = await PostModel.find();
+    const posts = await PostModel.find().sort({ Timestamp: -1 });
     res.status(200).json(posts);
   } catch (error) {
     console.error('Error fetching posts:', error);
