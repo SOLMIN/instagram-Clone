@@ -36,8 +36,8 @@ const UserModel = mongoose.model('User', userSchema);
 const connectToMongoDB = async () => {
   try {
     await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      // useNewUrlParser: true,
+      // useUnifiedTopology: true,
     });
     console.log('Connected to MongoDB using Mongoose');
   } catch (error) {
