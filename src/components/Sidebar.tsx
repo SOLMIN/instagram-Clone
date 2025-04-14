@@ -13,8 +13,10 @@ const RiHeartAdd2Line = require('react-icons/ri').RiHeartAdd2Line;
 const MdOutlineAutoAwesome = require('react-icons/md').MdOutlineAutoAwesome;
 const BsChatDots = require('react-icons/bs').BsChatDots;
 const CgAddR =  require('react-icons/cg').CgAddR;
+const IoIosLogOut =  require("react-icons/io").IoIosLogOut;
 const HiOutlineDotsHorizontal = require('react-icons/hi').HiOutlineDotsHorizontal;
 import CreatePostModal from './CreatePostModal';
+import { clearLoggedInUser } from '../store/userSlice';
 
 const SidebarContainer = styled.div`
   width: 220px;
@@ -167,15 +169,18 @@ const bottomNavItems = [
 
 const Sidebar: React.FC = () => {
   // Get the logged-in user's avatar from Redux or context
-  const loggedInUser = useSelector((state: RootState) => state.users);
+  const loggedInUser = useSelector((state: RootState) => state.users.loggedInUser); // Fetch loggedInUser from Redux
   const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(clearLoggedInUser()); // Dispatch the logout action
+  };
 
   const handleCreatePost = (image: string, caption: string) => {
     const newPost = {
       id: `${Date.now()}`, // Unique ID based on timestamp
-      username: loggedInUser.username, // Use the logged-in user's username
-      avatar: loggedInUser.avatar, // Use the logged-in user's avatar
+      username: loggedInUser?.username || 'Unknown User', // Provide a default username
+      avatar: loggedInUser?.avatar || '/default-avatar.png', // Provide a default avatar
       image,
       caption,
       likes: 0,
@@ -206,16 +211,27 @@ const Sidebar: React.FC = () => {
         <NavText>Create</NavText>
       </NavButton>
         {/* Profile Navigation Item */}
-        <NavItem to={`/profile/${loggedInUser.username}`} hideOnMobile={false}>
-          <Icon isAvatar>
-            <img
-              src={loggedInUser.avatar}
-              alt="User Avatar"
-              style={{ width: '100%', height: '100%' }}
-            />
-          </Icon>
-          <NavText>Profile</NavText>
-        </NavItem>
+        {loggedInUser && (
+        <>
+          <NavItem to={`/profile/${loggedInUser.username}`}>
+            <Icon>
+              <img
+                src={loggedInUser.avatar}
+                alt="User Avatar"
+                style={{ width: '32px', height: '32px', borderRadius: '50%' }}
+              />
+            </Icon>
+            <NavText>{loggedInUser.username}</NavText>
+          </NavItem>
+          <BottomNavContainer>
+            <NavButton onClick={handleLogout}>
+            <Icon><IoIosLogOut /></Icon>
+
+              <NavText>Logout</NavText>
+            </NavButton>
+          </BottomNavContainer>
+        </>
+      )}
         {/* Bottom Navigation Items */}
         <BottomNavContainer>
           {bottomNavItems.map((item) => (

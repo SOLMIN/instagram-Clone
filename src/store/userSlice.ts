@@ -15,6 +15,7 @@ export interface UsersState {
   username: any;
   avatar: any;
   users: UserState[];
+  loggedInUser: UserState | null; // Add loggedInUser state
   loading: boolean;
   error: string | null;
 }
@@ -22,6 +23,7 @@ export interface UsersState {
 const initialState: UsersState = {
   users: [],
   loading: false,
+  loggedInUser: null, // Add loggedInUser state
   error: null,
   username: undefined,
   avatar: undefined,
@@ -64,7 +66,14 @@ export const fetchPosts = async () => {
 const userSlice = createSlice({
   name: 'users',
   initialState,
-  reducers: {},
+  reducers: {
+    setLoggedInUser(state, action: PayloadAction<UserState>) {
+      state.loggedInUser = action.payload; // Set the logged-in user
+    },
+    clearLoggedInUser(state) {
+      state.loggedInUser = null; // Clear the logged-in user
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUsers.pending, (state) => {
@@ -81,5 +90,7 @@ const userSlice = createSlice({
       });
   },
 });
+
+export const { setLoggedInUser, clearLoggedInUser } = userSlice.actions;
 
 export default userSlice.reducer;
