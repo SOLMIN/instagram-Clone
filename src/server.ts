@@ -1,25 +1,24 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const { PostModel } = require('./services/postService'); // Import PostModel
-require('dotenv').config(); // Load environment variables
+import express, { Request, Response, NextFunction } from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import userRoutes from './routes/userRoutes';
+import postRoutes from './routes/postRoutes';
 
-const { UserModel } = require('./services/addUsers');
-const { addMockUsers } = require('./services/addUsers'); // Import addMockUsers
+dotenv.config(); // Load environment variables
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(express.json());
 
 // Connect to MongoDB
 mongoose.set('strictQuery', false); // Disable deprecated warnings
-
 const connectToMongoDB = async () => {
   try {
-    await mongoose.connect("mongodb+srv://solmin:9Kx3xZBugjxIwHuH@cluster5.jllzqu7.mongodb.net/test?retryWrites=true&w=majority", {
-      serverSelectionTimeoutMS: 30000, // Set timeout for server selection
-    });
+    const mongoURI = process.env.MONGO_URI;
+    if (!mongoURI) throw new Error('MongoDB URI is not defined in environment variables');
+    await mongoose.connect(mongoURI, { serverSelectionTimeoutMS: 30000 });
     console.log('Connected to MongoDB using Mongoose');
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);
@@ -27,69 +26,21 @@ const connectToMongoDB = async () => {
   }
 };
 
-// Wait for MongoDB connection before starting the server
+// Routes
+app.use('/api/users', userRoutes);
+app.use('/api/posts', postRoutes);
+
+// Centralized Error Handling Middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error(err.message);
+  res.status(500).json({ error: 'Internal Server Error' });
+});
+
+// Start the server after connecting to MongoDB
 connectToMongoDB().then(() => {
-  // Root Route
-  app.get('/', async (req: any, res: any): Promise<void> => {
-    try {
-      const users = await UserModel.find(); // Fetch all users from the database
-      res.status(200).json(users); // Send the users as a JSON response
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      res.status(500).json({ error: 'Failed to fetch users' }); // Send an error response
-    }
-  });
-
-  // Fetch Users API
-  app.get('/api/users', async (req: any, res: any): Promise<void> => {
-    try {
-      const users = await UserModel.find(); // Fetch all users from the database
-      res.status(200).json(users); // Send the users as a JSON response
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      res.status(500).json({ error: 'Failed to fetch users' }); // Send an error response
-    }
-  });
-
-  // Add Post API
-  app.post('/api/add-post', async (req: any, res: any): Promise<void> => {
-    try {
-      const post = req.body;
-
-      // Validate request body
-      if (!post || !post.id || !post.username || !post.caption) {
-        return res.status(400).json({ error: 'Post data is incomplete' });
-      }
-
-      // Create a new post
-      const newPost = new PostModel(post);
-
-      // Save the post to the database
-      await newPost.save();
-
-      res.status(200).json({ message: 'Post added successfully!', post: newPost });
-    } catch (error) {
-      console.error('Error adding post:', error);
-      res.status(500).json({ error: 'Failed to add post' });
-    }
-  });
-
-  // Fetch Posts API
-  app.get('/api/posts', async (req: any, res: any): Promise<void> => {
-    try {
-      const posts = await PostModel.find(); // Fetch all posts from the database
-      res.status(200).json(posts); // Send the posts as a JSON response
-    } catch (error) {
-      console.error('Error fetching posts:', error);
-      res.status(500).json({ error: 'Failed to fetch posts' });
-    }
-  });
-
-  // Start the server
   app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
   });
 });
 
-// Add this line to make the file a module
 export {};

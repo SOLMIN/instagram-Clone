@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { useSelector, useDispatch } from 'react-redux'; // Updated import to include useDispatch
-import { RootState, addPost } from '../store/store'; // Adjust the import path based on your project structure
+import { RootState } from '../store/store'; // Adjust the import path based on your project structure
+import {addPost} from '../slice/postSlice'; // Import addPost action
 
 // Import icons from react-icons
 const FaHome = require('react-icons/fa').FaHome;
@@ -16,7 +17,7 @@ const CgAddR =  require('react-icons/cg').CgAddR;
 const IoIosLogOut =  require("react-icons/io").IoIosLogOut;
 const HiOutlineDotsHorizontal = require('react-icons/hi').HiOutlineDotsHorizontal;
 import CreatePostModal from './CreatePostModal';
-import { clearLoggedInUser } from '../store/userSlice';
+import { clearLoggedInUser } from '../slice/userSlice';
 
 const SidebarContainer = styled.div`
   width: 220px;

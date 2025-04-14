@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import { useAppDispatch } from './store/hooks'; // Adjust the import path based on your project structure
-import { fetchUsers, setLoggedInUser } from './store/userSlice'; 
+import { useAppDispatch } from './hooks/hooks'; // Adjust the import path based on your project structure
+import { fetchUsers, setLoggedInUser } from './slice/userSlice'; 
 import Profile from './pages/Profile';
 import Layout from './components/Layout';
 

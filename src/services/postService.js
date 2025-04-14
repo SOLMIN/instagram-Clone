@@ -2,22 +2,22 @@ const mongoose = require('mongoose');
 
 // Define Post Schema
 const postSchema = new mongoose.Schema({
-  id: String,
-  username: String,
-  avatar: String,
-  image: String,
-  video: String,
-  caption: String,
-  likes: Number,
+  id: { type: String, required: true },
+  username: { type: String, required: true },
+  avatar: { type: String, required: true },
+  image: { type: String },
+  video: { type: String },
+  caption: { type: String, required: true },
+  likes: { type: Number, default: 0 },
   comments: [
     {
-      id: String,
-      text: String,
-      likes: Number,
+      id: { type: String, required: true },
+      text: { type: String, required: true },
+      likes: { type: Number, default: 0 },
     },
   ],
-  isVerified: Boolean,
-  timeAgo: String,
+  isVerified: { type: Boolean, default: false },
+  timeAgo: { type: String, required: true },
 });
 
 // Create Post Model

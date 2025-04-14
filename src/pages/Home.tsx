@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/store'; // Import AppDispatch type
-import { fetchPosts } from '../store/postSlice'; // Import the fetchPosts thunk
-import { addComment, RootState } from '../store/store'; // Import RootState type
+import { fetchPosts, addComment } from '../slice/postSlice'; // Import the fetchPosts thunk
+import { RootState } from '../store/store'; // Import RootState type
 import Stories from '../components/Stories'; // Import Stories component
 import CreatePostModal from '../components/CreatePostModal'; // Import the CreatePostModal component
 
