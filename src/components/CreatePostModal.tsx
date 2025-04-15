@@ -123,11 +123,22 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
       const reader = new FileReader();
+
       reader.onload = () => {
-        setImage(reader.result as string);
+        const fileType = file.type;
+
+        if (fileType.startsWith('image/')) {
+          setImage(reader.result as string); // Set image preview
+        } else if (fileType === 'video/mp4') {
+          setImage(reader.result as string); // Set video preview (base64)
+        } else {
+          alert('Unsupported file type. Please upload an image or an MP4 video.');
+        }
       };
-      reader.readAsDataURL(e.target.files[0]);
+
+      reader.readAsDataURL(file); // Read file as base64
     }
   };
 
@@ -150,10 +161,29 @@ const CreatePostModal: React.FC<CreatePostModalProps> = ({ onClose, onSubmit }) 
           <HiddenFileInput
             id="file-upload"
             type="file"
-            accept="image/*"
+            accept="image/*,video/mp4"
             onChange={handleImageChange}
           />
-          {image && <PreviewImage src={image} alt="Preview" />}
+          {image && (
+            <>
+              {image.startsWith('data:video') ? (
+                <video
+                  controls
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '300px', // Limit video height
+                    borderRadius: '8px',
+                    marginBottom: '10px',
+                  }}
+                >
+                  <source src={image} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              ) : (
+                <PreviewImage src={image} alt="Preview" />
+              )}
+            </>
+          )}
         </FileInputContainer>
         <InputContainer>
           <Input

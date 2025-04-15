@@ -199,12 +199,14 @@ const Sidebar: React.FC = () => {
     }
   };
 
-  const handleCreatePost = (image: string, caption: string) => {
+  const handleCreatePost = (file: string, caption: string) => {
+    const isVideo = file.startsWith('data:video'); // Check if the file is a video
     const newPost = {
       id: `${Date.now()}`, // Unique ID based on timestamp
       username: loggedInUser?.username || 'Unknown User', // Provide a default username
       avatar: loggedInUser?.avatar || '/default-avatar.png', // Provide a default avatar
-      image,
+      image: isVideo ? undefined : file, // Store in `image` if it's not a video
+      video: isVideo ? file : undefined, // Store in `video` if it's a video
       caption,
       likes: 0,
       comments: [],
