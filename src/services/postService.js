@@ -24,4 +24,14 @@ const postSchema = new mongoose.Schema({
 // Create Post Model
 const PostModel = mongoose.models.Post || mongoose.model('Post', postSchema);
 
-module.exports = { PostModel };
+const deletePost = async (postId) => {
+  try {
+    await PostModel.findOneAndDelete({ id: postId });
+    console.log(`Post with id ${postId} deleted successfully`);
+  } catch (error) {
+    console.error(`Error deleting post with id ${postId}:`, error);
+    throw error;
+  }
+};
+
+module.exports = { PostModel, deletePost };

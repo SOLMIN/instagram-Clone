@@ -49,6 +49,22 @@ export const fetchPostsIfNeeded = createAsyncThunk<Post[], { page: number; limit
   }
 );
 
+export const deletePost = createAsyncThunk<void, string, { state: RootState }>(
+  'posts/deletePost',
+  async (postId, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/posts/${postId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to delete post');
+      }
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'An error occurred');
+    }
+  }
+);
+
 const postSlice = createSlice({
   name: 'posts',
   initialState,
@@ -79,19 +95,26 @@ const postSlice = createSlice({
       })
       .addCase(fetchPostsIfNeeded.fulfilled, (state, action: PayloadAction<Post[]>) => {
         state.loading = false;
-
-        // Append new posts to the existing posts array
-        state.posts = [...state.posts, ...action.payload];
-
+      
+        // Filter out duplicate posts
+        const newPosts = action.payload.filter(
+          (newPost) => !state.posts.some((existingPost) => existingPost.id === newPost.id)
+        );
+        // Append only unique posts
+        state.posts = [...state.posts, ...newPosts];
+      
         // Update `hasMore` based on whether new posts were fetched
         state.hasMore = action.payload.length > 0;
-
+      
         // Increment the current page
         state.currentPage += 1;
       })
       .addCase(fetchPostsIfNeeded.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.posts = state.posts.filter((post) => post.id !== action.meta.arg);
       });
   },
 });

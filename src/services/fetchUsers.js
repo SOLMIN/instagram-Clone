@@ -53,7 +53,7 @@ const fetchUsers = async () => {
 
     // Fetch all users
     const users = await UserModel.find();
-    console.log('Fetched users:', users);
+    // console.log('Fetched users:', users);
     process.exit(0);
   } catch (error) {
     console.error('Error fetching users:', error);

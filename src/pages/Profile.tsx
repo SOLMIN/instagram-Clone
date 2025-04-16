@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../store/store';
-import { fetchPostsIfNeeded } from '../slice/postSlice';
+import { deletePost, fetchPostsIfNeeded } from '../slice/postSlice';
 import {
   ProfileContainer,
   ProfileHeader,
@@ -38,7 +38,7 @@ const Profile: React.FC = () => {
   ); // Fetch user from Redux store
 
   const [activeTab, setActiveTab] = useState<'posts' | 'reels' | 'tagged'>('posts');
-  const [selectedPost, setSelectedPost] = useState<{ video?: string; image?: string; caption: string } | null>(null);
+  const [selectedPost, setSelectedPost] = useState<{ id: string; video?: string; image?: string; caption: string } | null>(null);
 
   if (!user) {
     return <div>User not found</div>;
@@ -50,6 +50,11 @@ const Profile: React.FC = () => {
 
   const closeModal = () => {
     setSelectedPost(null);
+  };
+
+  const handleDeletePost = (postId: string) => {
+    dispatch(deletePost(postId));
+    closeModal();
   };
 
   return (
@@ -89,18 +94,23 @@ const Profile: React.FC = () => {
 
       {/* Posts Grid */}
       {activeTab === 'posts' && (
-        <PostsGrid>
-          {userPosts.map((post) =>
-            post.video ? (
-              <VideoThumbnail key={post.id} onClick={() => openModal(post)} controls>
-                <source src={post.video} type="video/mp4" />
-                Your browser does not support the video tag.
-              </VideoThumbnail>
-            ) : (
-              <PostThumbnail key={post.id} src={post.image} alt={post.caption} onClick={() => openModal(post)} />
-            )
-          )}
-        </PostsGrid>
+       <PostsGrid>
+       {userPosts.map((post, index) =>
+         post.video ? (
+           <VideoThumbnail key={`${post.id}-${index}`} onClick={() => openModal(post)} controls>
+             <source src={post.video} type="video/mp4" />
+             Your browser does not support the video tag.
+           </VideoThumbnail>
+         ) : (
+           <PostThumbnail
+             key={`${post.id}-${index}`}
+             src={post.image}
+             alt={post.caption}
+             onClick={() => openModal(post)}
+           />
+         )
+       )}
+     </PostsGrid>
       )}
 
       {/* Modal */}
@@ -117,6 +127,20 @@ const Profile: React.FC = () => {
             )}
             <p>{selectedPost.caption}</p>
             <CloseButton onClick={closeModal}>Close</CloseButton>
+            <button
+              style={{
+                marginTop: '10px',
+                padding: '10px 20px',
+                backgroundColor: '#ff4d4d',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+              }}
+              onClick={() => handleDeletePost(selectedPost.id)}
+            >
+              Delete Post
+            </button>
           </ModalContent>
         </ModalOverlay>
       )}
