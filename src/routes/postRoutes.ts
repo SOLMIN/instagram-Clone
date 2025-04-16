@@ -30,7 +30,16 @@ router.post('/add', async (req: Request, res: Response) => {
 // Fetch Posts
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const posts = await PostModel.find().sort({ Timestamp: -1 });
+    const page = parseInt(req.query.page as string) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit as string) || 10; // Default to 10 posts per page
+    const skip = (page - 1) * limit;
+
+    const posts = await PostModel.find()
+      .sort({ Timestamp: -1 })
+      .skip(skip)
+      .limit(limit)
+      .lean();
+
     res.status(200).json(posts);
   } catch (error) {
     console.error('Error fetching posts:', error);
@@ -39,3 +48,7 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 export default router;
+
+function lean() {
+  throw new Error('Function not implemented.');
+}

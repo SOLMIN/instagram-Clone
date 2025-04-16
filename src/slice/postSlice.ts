@@ -1,37 +1,60 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Post } from '../constants/mockData'; // Use the shared Post type
+import { RootState } from '../store/store';
 
 export interface PostsState {
   posts: Post[];
   loading: boolean;
   error: string | null;
+  hasMore: boolean; // To track if more posts are available
+  currentPage: number; // Current page being fetched
 }
 
 const initialState: PostsState = {
-  posts: [],
+  posts: [], // Initialize posts as an empty array
   loading: false,
   error: null,
+  hasMore: true,
+  currentPage: 1,
 };
 
-// Async thunk to fetch posts
-export const fetchPosts = createAsyncThunk<Post[]>('posts/fetchPosts', async (_, { rejectWithValue }) => {
-  try {
-    const response = await fetch('/api/posts');
-    if (!response.ok) {
-      throw new Error('Failed to fetch posts');
+export const fetchPostsIfNeeded = createAsyncThunk<Post[], { page: number; limit: number }, { state: RootState }>(
+  'posts/fetchPostsIfNeeded',
+  async ({ page, limit }, { getState, rejectWithValue }) => {
+    console.log('Fetching posts for page:', page, 'with limit:', limit);
+    const state = getState();
+    const cachedPosts = state.posts.posts;
+
+    // Check if posts for the requested page are already cached
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const isPageCached = cachedPosts.some(
+      (post, index) => index >= startIndex && index < endIndex
+    );
+    if (isPageCached) {
+      console.log(`Page ${page} is already cached.`);
+      return []; // Return an empty array instead of cached posts
     }
-    return await response.json();
-  } catch (error: any) {
-    return rejectWithValue(error.message || 'An error occurred');
+
+    // Otherwise, fetch posts from the API
+    try {
+      const response = await fetch(`/api/posts?page=${page}&limit=${limit}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch posts');
+      }
+      return await response.json();
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'An error occurred');
+    }
   }
-});
+);
 
 const postSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {
     addPost(state, action: PayloadAction<Post>) {
-      state.posts.unshift(action.payload); // Add new post to the top
+      state.posts = [action.payload, ...state.posts]; // Add new post to the top without slicing
     },
     likePost(state, action: PayloadAction<string>) {
       const post = state.posts.find((p) => p.id === action.payload);
@@ -50,15 +73,23 @@ const postSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchPosts.pending, (state) => {
+      .addCase(fetchPostsIfNeeded.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(fetchPosts.fulfilled, (state, action: PayloadAction<Post[]>) => {
+      .addCase(fetchPostsIfNeeded.fulfilled, (state, action: PayloadAction<Post[]>) => {
         state.loading = false;
-        state.posts = action.payload;
+
+        // Append new posts to the existing posts array
+        state.posts = [...state.posts, ...action.payload];
+
+        // Update `hasMore` based on whether new posts were fetched
+        state.hasMore = action.payload.length > 0;
+
+        // Increment the current page
+        state.currentPage += 1;
       })
-      .addCase(fetchPosts.rejected, (state, action) => {
+      .addCase(fetchPostsIfNeeded.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../store/store';
-import { fetchPosts } from '../slice/postSlice';
+import { fetchPostsIfNeeded } from '../slice/postSlice';
 import {
   ProfileContainer,
   ProfileHeader,
@@ -25,13 +25,12 @@ const Profile: React.FC = () => {
   const { username } = useParams<{ username: string }>();
   const dispatch: AppDispatch = useDispatch();
 
-  // Fetch posts when the component mounts
+  // Fetch posts if needed when the component mounts
   useEffect(() => {
-    dispatch(fetchPosts());
+    dispatch(fetchPostsIfNeeded({ page: 1, limit: 10 })); // Pass page and limit as arguments
   }, [dispatch]);
 
   const posts = useSelector((state: RootState) => state.posts.posts);
-  console.log('Posts from Redux:', posts); // Log posts to check if they are fetched correctly
   const userPosts = posts.filter((post) => post.username === username);
 
   const user = useSelector((state: RootState) =>

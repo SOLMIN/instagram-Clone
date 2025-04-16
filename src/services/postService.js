@@ -18,7 +18,7 @@ const postSchema = new mongoose.Schema({
   ],
   isVerified: { type: Boolean, default: false },
   timeAgo: { type: String, required: true },
-  Timestamp: { type: Date, default: Date.now },
+  Timestamp: { type: Date, default: Date.now, index: true }, // Add an index on Timestamp
 });
 
 // Create Post Model

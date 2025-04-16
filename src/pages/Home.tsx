@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { AppDispatch } from '../store/store'; // Import AppDispatch type
-import { fetchPosts, addComment } from '../slice/postSlice'; // Import the fetchPosts thunk
-import { RootState } from '../store/store'; // Import RootState type
-import Stories from '../components/Stories'; // Import Stories component
-import CreatePostModal from '../components/CreatePostModal'; // Import the CreatePostModal component
-
+import { AppDispatch } from '../store/store';
+import { fetchPostsIfNeeded, addComment } from '../slice/postSlice';
+import { RootState } from '../store/store';
+import Stories from '../components/Stories';
 import {
   Container,
   PostCard,
@@ -29,12 +27,10 @@ import {
 } from './Home.styles';
 import { Link } from 'react-router-dom';
 
-
 const Home: React.FC = () => {
-
   const dispatch: AppDispatch = useDispatch();
-  // const dispatch = useDispatch();
-  const { posts, loading, error } = useSelector((state: RootState) => state.posts); // Fetch posts from Redux store
+  const { posts, loading, error, hasMore, currentPage } = useSelector((state: RootState) => state.posts);
+  const [isFetching, setIsFetching] = useState(false);
   const [visiblePosts, setVisiblePosts] = useState(posts.slice(0, 5)); // Show initial 5 posts
   const [commentText, setCommentText] = useState('');
 
@@ -46,31 +42,51 @@ const Home: React.FC = () => {
     }
   };
   useEffect(() => {
-    dispatch(fetchPosts()); // Fetch posts when the component mounts
+    // Fetch the first page of posts when the component mounts
+    dispatch(fetchPostsIfNeeded({ page: 1, limit: 10 }));
   }, [dispatch]);
 
   useEffect(() => {
-    setVisiblePosts(posts.slice(0, postCount));
-  }, [posts, postCount]);
+    // Update visiblePosts whenever posts in the Redux store change
+    setVisiblePosts(posts); // Reflect all posts from the Redux store
+  }, [posts]);
+
+  useEffect(() => {
+    console.log('Current Page:', currentPage);
+    console.log('Posts:', posts);
+  }, [posts, currentPage]);
 
   // Handle infinite scroll
   const handleScroll = () => {
-    if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight) {
-      setPostCount((prevCount) => prevCount + 5); // Load 5 more posts
+    if (
+      window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 100 &&
+      !loading &&
+      hasMore
+    ) {
+      setIsFetching(true);
     }
   };
 
   useEffect(() => {
+    if (isFetching) {
+      console.log('Dispatching fetchPostsIfNeeded');
+      dispatch(fetchPostsIfNeeded({ page: currentPage + 1, limit: 10 })).then(() => {
+        setIsFetching(false); // Reset isFetching after fetching
+      });
+    }
+  }, [isFetching, dispatch, currentPage]);
+
+  useEffect(() => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  if (loading) {
-    return <p>Loading posts...</p>;
-  }
+  }, [loading, hasMore, isFetching]);
 
   if (error) {
     return <p>Error: {error}</p>;
+  }
+
+  if (loading && posts.length === 0) {
+    return <p>Loading posts...</p>;
   }
 
   return (
@@ -80,8 +96,9 @@ const Home: React.FC = () => {
 
       <Container>
         {visiblePosts.length === 0 && <p>No posts available</p>}
-        {visiblePosts.map((post) => (
-          <PostCard key={post.id}>
+
+        {visiblePosts.map((post, index) => (
+          <PostCard key={`${post.id}-${index}`}>
             <PostHeader>
               <Avatar src={post.avatar} alt={`${post.username}'s avatar`} />
               <UsernameContainer>
@@ -92,9 +109,9 @@ const Home: React.FC = () => {
               </UsernameContainer>
               <TimeAgo>{post.timeAgo}</TimeAgo>
             </PostHeader>
-            {post.image && <PostImage src={post.image} alt={post.caption} />}
+            {post.image && <PostImage src={post.image} alt={post.caption} style={{  borderRadius: '8px', marginBottom: '10px', width: '100%', maxHeight: '500px', objectFit: 'cover' }} />}
             {post.video && (
-              <video controls autoPlay loop muted width="100%" style={{ borderRadius: '8px', marginBottom: '10px' }}>
+              <video controls autoPlay loop muted width="100%" style={{ borderRadius: '8px', marginBottom: '10px', width: '100%', maxHeight: '500px', objectFit: 'cover' }}>
                 <source src={post.video} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>
@@ -138,6 +155,8 @@ const Home: React.FC = () => {
             </CommentSection>
           </PostCard>
         ))}
+        {loading && <p>Loading...</p>}
+        {!hasMore && <p>No more posts to load.</p>}
       </Container>
     </div>
   );
