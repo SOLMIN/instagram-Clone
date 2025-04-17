@@ -8,9 +8,10 @@ const uri = process.env.MONGO_URI;
 
 // Define User Schema
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true },
-  avatar: { type: String, required: true },
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
   name: { type: String, required: true },
+  avatar: { type: String },
   bio: { type: String },
   followers: { type: Number, default: 0 },
   following: { type: Number, default: 0 },
