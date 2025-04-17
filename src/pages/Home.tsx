@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch } from '../store/store';
-import { fetchPostsIfNeeded, addComment } from '../slice/postSlice';
+import { fetchPostsIfNeeded, addComment, likePost } from '../slice/postSlice';
 import { RootState } from '../store/store';
 import Stories from '../components/Stories';
 import {
@@ -34,13 +34,17 @@ const Home: React.FC = () => {
   const [visiblePosts, setVisiblePosts] = useState(posts.slice(0, 5)); // Show initial 5 posts
   const [commentText, setCommentText] = useState('');
 
-  const [postCount, setPostCount] = useState(5); // Number of posts to show initially
   const handleAddComment = (postId: string) => {
     if (commentText.trim()) {
       dispatch(addComment({ postId, text: commentText }));
       setCommentText('');
     }
   };
+
+  const handleLikePost = (postId: string) => {
+    dispatch(likePost(postId));
+  };
+
   useEffect(() => {
     // Fetch the first page of posts when the component mounts
     dispatch(fetchPostsIfNeeded({ page: 1, limit: 10 }));
@@ -109,7 +113,7 @@ const Home: React.FC = () => {
               </UsernameContainer>
               <TimeAgo>{post.timeAgo}</TimeAgo>
             </PostHeader>
-            {post.image && <PostImage src={post.image} alt={post.caption} style={{  borderRadius: '8px', marginBottom: '10px', width: '100%', maxHeight: '500px', objectFit: 'cover' }} />}
+            {post.image && <PostImage src={post.image} alt={post.caption} style={{ borderRadius: '8px', marginBottom: '10px', width: '100%', maxHeight: '500px', objectFit: 'cover' }} />}
             {post.video && (
               <video controls autoPlay loop muted width="100%" style={{ borderRadius: '8px', marginBottom: '10px', width: '100%', maxHeight: '500px', objectFit: 'cover' }}>
                 <source src={post.video} type="video/mp4" />
@@ -119,8 +123,10 @@ const Home: React.FC = () => {
 
             <PostFooter>
               <LikeButton
+                postId={post.id}
                 initialLikes={post.likes}
                 ariaLabel={`Like post by ${post.username}`}
+                onLike={handleLikePost}
               />
               <CommentsCount>{post.comments.length} comments</CommentsCount>
             </PostFooter>
@@ -138,8 +144,10 @@ const Home: React.FC = () => {
                 <CommentStyled key={comment.id}>
                   <span>{comment.text}</span>
                   <LikeButton
+                    postId={comment.id}
                     initialLikes={comment.likes}
                     ariaLabel={`Like comment: "${comment.text}"`}
+                    onLike={handleLikePost} // Pass handleLikePost as a prop
                   />
                 </CommentStyled>
               ))}
@@ -162,13 +170,19 @@ const Home: React.FC = () => {
   );
 };
 
-const LikeButton: React.FC<{ initialLikes: number; ariaLabel: string }> = ({ initialLikes, ariaLabel }) => {
+const LikeButton: React.FC<{ postId: string; initialLikes: number; ariaLabel: string; onLike: (postId: string) => void }> = ({
+  postId,
+  initialLikes,
+  ariaLabel,
+  onLike,
+}) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(initialLikes);
 
   const handleLikeToggle = () => {
     setIsLiked(!isLiked);
     setLikeCount((prevCount) => (isLiked ? prevCount - 1 : prevCount + 1));
+    onLike(postId); // Call the onLike function passed as a prop
   };
 
   return (

@@ -59,6 +59,61 @@ router.delete('/:id', async (req: Request, res: Response) => {
   }
 });
 
+// Add Comment
+router.post('/:id/comment', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { text } = req.body;
+
+    if (!text) {
+      return res.status(400).json({ error: 'Comment text is required' });
+    }
+
+    const comment = {
+      id: Date.now().toString(),
+      text,
+      likes: 0,
+    };
+
+    const updatedPost = await PostModel.findOneAndUpdate(
+      { id },
+      { $push: { comments: comment } },
+      { new: true }
+    );
+
+    if (!updatedPost) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+
+    res.status(200).json({ message: 'Comment added successfully', post: updatedPost });
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    res.status(500).json({ error: 'Failed to add comment' });
+  }
+});
+
+// Like Post
+router.post('/:id/like', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const updatedPost = await PostModel.findOneAndUpdate(
+      { id },
+      { $inc: { likes: 1 } },
+      { new: true }
+    );
+
+    if (!updatedPost) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+
+    res.status(200).json({ message: 'Post liked successfully', post: updatedPost });
+  } catch (error) {
+    console.error('Error liking post:', error);
+    res.status(500).json({ error: 'Failed to like post' });
+  }
+});
+
 export default router;
 
 function lean() {

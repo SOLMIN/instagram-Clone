@@ -1,17 +1,17 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Post } from '../constants/mockData'; // Use the shared Post type
+import { Post } from '../constants/mockData';
 import { RootState } from '../store/store';
 
 export interface PostsState {
   posts: Post[];
   loading: boolean;
   error: string | null;
-  hasMore: boolean; // To track if more posts are available
-  currentPage: number; // Current page being fetched
+  hasMore: boolean;
+  currentPage: number;
 }
 
 const initialState: PostsState = {
-  posts: [], // Initialize posts as an empty array
+  posts: [],
   loading: false,
   error: null,
   hasMore: true,
@@ -72,20 +72,20 @@ const postSlice = createSlice({
     addPost(state, action: PayloadAction<Post>) {
       state.posts = [action.payload, ...state.posts]; // Add new post to the top without slicing
     },
-    likePost(state, action: PayloadAction<string>) {
-      const post = state.posts.find((p) => p.id === action.payload);
-      if (post) post.likes++;
-    },
-    addComment(state, action: PayloadAction<{ postId: string; text: string }>) {
-      const post = state.posts.find((p) => p.id === action.payload.postId);
-      if (post) {
-        post.comments.push({
-          id: Date.now().toString(),
-          text: action.payload.text,
-          likes: 0,
-        });
-      }
-    },
+    // likePost(state, action: PayloadAction<string>) {
+    //   const post = state.posts.find((p) => p.id === action.payload);
+    //   if (post) post.likes++;
+    // },
+    // addComment(state, action: PayloadAction<{ postId: string; text: string }>) {
+    //   const post = state.posts.find((p) => p.id === action.payload.postId);
+    //   if (post) {
+    //     post.comments.push({
+    //       id: Date.now().toString(),
+    //       text: action.payload.text,
+    //       likes: 0,
+    //     });
+    //   }
+    // },
   },
   extraReducers: (builder) => {
     builder
@@ -103,10 +103,8 @@ const postSlice = createSlice({
         // Append only unique posts
         state.posts = [...state.posts, ...newPosts];
       
-        // Update `hasMore` based on whether new posts were fetched
         state.hasMore = action.payload.length > 0;
       
-        // Increment the current page
         state.currentPage += 1;
       })
       .addCase(fetchPostsIfNeeded.rejected, (state, action) => {
@@ -115,10 +113,65 @@ const postSlice = createSlice({
       })
       .addCase(deletePost.fulfilled, (state, action) => {
         state.posts = state.posts.filter((post) => post.id !== action.meta.arg);
+      })
+      .addCase(addComment.fulfilled, (state, action) => {
+        const updatedPost = action.payload;
+        const postIndex = state.posts.findIndex((post) => post.id === updatedPost.id);
+        if (postIndex !== -1) {
+          state.posts[postIndex] = updatedPost;
+        }
+      })
+      .addCase(likePost.fulfilled, (state, action) => {
+        const updatedPost = action.payload;
+        const postIndex = state.posts.findIndex((post) => post.id === updatedPost.id);
+        if (postIndex !== -1) {
+          state.posts[postIndex] = updatedPost;
+        }
       });
   },
 });
 
-export const { addPost, likePost, addComment } = postSlice.actions;
+export const addComment = createAsyncThunk<
+  Post,
+  { postId: string; text: string },
+  { state: RootState }
+>('posts/addComment', async ({ postId, text }, { rejectWithValue }) => {
+  try {
+    const response = await fetch(`/api/posts/${postId}/comment`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to add comment');
+    }
+
+    return await response.json();
+  } catch (error: any) {
+    return rejectWithValue(error.message || 'An error occurred');
+  }
+});
+
+export const likePost = createAsyncThunk<Post, string, { state: RootState }>(
+  'posts/likePost',
+  async (postId, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/api/posts/${postId}/like`, {
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to like post');
+      }
+
+      return await response.json();
+    } catch (error: any) {
+      return rejectWithValue(error.message || 'An error occurred');
+    }
+  }
+);
+
+export const { addPost } = postSlice.actions;
 
 export default postSlice.reducer;

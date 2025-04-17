@@ -34,4 +34,32 @@ const deletePost = async (postId) => {
   }
 };
 
-module.exports = { PostModel, deletePost };
+const addCommentToPost = async (postId, comment) => {
+  try {
+    const updatedPost = await PostModel.findOneAndUpdate(
+      { id: postId },
+      { $push: { comments: comment } },
+      { new: true }
+    );
+    return updatedPost;
+  } catch (error) {
+    console.error(`Error adding comment to post ${postId}:`, error);
+    throw error;
+  }
+};
+
+const likePost = async (postId) => {
+  try {
+    const updatedPost = await PostModel.findOneAndUpdate(
+      { id: postId },
+      { $inc: { likes: 1 } },
+      { new: true }
+    );
+    return updatedPost;
+  } catch (error) {
+    console.error(`Error liking post ${postId}:`, error);
+    throw error;
+  }
+};
+
+module.exports = { PostModel, deletePost, addCommentToPost, likePost };
