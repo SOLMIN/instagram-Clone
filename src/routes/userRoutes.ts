@@ -61,7 +61,6 @@ router.post('/login', async (req: Request, res: Response) => {
     }
     
     const user = await UserModel.findOne({ username });
-    console.log('User found in database:', user); // Debug log
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
