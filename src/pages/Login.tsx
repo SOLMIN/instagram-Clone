@@ -16,6 +16,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      console.log('Login form data:', formData); // Debug log
       const response = await fetch('/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -24,10 +25,12 @@ const Login: React.FC = () => {
 
       if (!response.ok) {
         const data = await response.json();
+        console.error('Login error response:', data); // Debug log
         throw new Error(data.error || 'Login failed');
       }
 
       const data = await response.json();
+      console.log('Login successful response:', data); // Debug log
       localStorage.setItem('token', data.token);
       dispatch(setLoggedInUser(data.user));
       navigate('/');

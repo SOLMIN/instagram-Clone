@@ -204,7 +204,7 @@ const Sidebar: React.FC = () => {
     const newPost = {
       id: `${Date.now()}`, // Unique ID based on timestamp
       username: loggedInUser?.username || 'Unknown User', // Provide a default username
-      avatar: loggedInUser?.avatar || '/default-avatar.png', // Provide a default avatar
+      avatar: loggedInUser?.avatar || 'https://randomuser.me/api/portraits/women/7.jpg', // Provide a default avatar
       image: isVideo ? undefined : file, // Store in `image` if it's not a video
       video: isVideo ? file : undefined, // Store in `video` if it's a video
       caption,

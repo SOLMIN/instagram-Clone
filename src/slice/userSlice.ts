@@ -19,10 +19,12 @@ const initialState: UsersState = {
 export const fetchUsers = createAsyncThunk<User[]>('users/fetchUsers', async (_, { rejectWithValue }) => {
   try {
     const response = await fetch('/api/users');
+    const data = await response.json();
+    // console.log('API Response:', data); // Log the API response
     if (!response.ok) {
       throw new Error('Failed to fetch users');
     }
-    return await response.json();
+    return data;
   } catch (error: any) {
     return rejectWithValue(error.message || 'An error occurred');
   }
@@ -47,7 +49,8 @@ const userSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action: PayloadAction<User[]>) => {
         state.loading = false;
-        state.users = action.payload;
+        state.users = [...action.payload]; // Replace the users array with fresh data
+        // console.log('Users fetched and stored in Redux:', state.users); // Debug log
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.loading = false;

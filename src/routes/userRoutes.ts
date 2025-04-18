@@ -8,7 +8,7 @@ const router: Router = Router(); // Explicitly annotate the type
 // Fetch Users
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const users = await UserModel.find();
+    const users = await UserModel.find({}, '-password'); // Exclude the password field
     res.status(200).json(users);
   } catch (error) {
     console.error('Error fetching users:', error);
@@ -36,7 +36,7 @@ router.post('/signup', async (req: Request, res: Response) => {
       username,
       password: hashedPassword,
       name,
-      avatar: avatar || 'https://default-avatar.png',
+      avatar: avatar || 'https://randomuser.me/api/portraits/men/8.jpg',
       bio: bio || '',
       followers: 0,
       following: 0,
@@ -59,8 +59,10 @@ router.post('/login', async (req: Request, res: Response) => {
     if (!username || !password) {
       return res.status(400).json({ error: 'Username and password are required' });
     }
-
+    
     const user = await UserModel.findOne({ username });
+    console.log('User found in database:', user); // Debug log
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
