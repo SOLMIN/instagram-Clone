@@ -10,6 +10,7 @@ import Layout from './components/Layout';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from './store/store';
 import { fetchUsers } from './slice/userSlice';
+import Profile from './pages/Profile';
 
 
 const App: React.FC = () => {
@@ -30,6 +31,10 @@ const App: React.FC = () => {
         <Route
           path="/"
           element={loggedInUser ? <Layout><Home /></Layout> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/profile/:username"
+          element={loggedInUser ? <Layout><Profile /></Layout> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>
