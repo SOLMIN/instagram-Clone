@@ -98,7 +98,8 @@ interface StoriesProps {
 }
 
 const Stories: React.FC = () => {
-  const users = useSelector((state: RootState) => state.users.users); // Access users from Redux
+  const users = useSelector((state: RootState) => state.users.users);
+  console.log('Users-->', users);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isAtStart, setIsAtStart] = useState(true);
   const [isAtEnd, setIsAtEnd] = useState(false);
