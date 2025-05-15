@@ -13,6 +13,7 @@ const MdOutlineAutoAwesome = require('react-icons/md').MdOutlineAutoAwesome;
 const BsChatDots = require('react-icons/bs').BsChatDots;
 const CgAddR =  require('react-icons/cg').CgAddR;
 const IoIosLogOut =  require("react-icons/io").IoIosLogOut;
+const IoIosChatbubbles = require("react-icons/io").IoIosChatbubbles;
 const HiOutlineDotsHorizontal = require('react-icons/hi').HiOutlineDotsHorizontal;
 import CreatePostModal from './CreatePostModal';
 import { clearLoggedInUser } from '../slice/userSlice';
@@ -265,6 +266,10 @@ const Sidebar: React.FC = () => {
               <NavText>{item.text}</NavText>
             </NavItem>
           ))}
+           <NavItem to="/messages">
+            <Icon><IoIosChatbubbles /></Icon>
+            <NavText>Messages</NavText>
+          </NavItem>
         </BottomNavContainer>
       </SidebarContainer>
 

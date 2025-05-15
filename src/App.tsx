@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from './store/store';
+import Messages from './components/Messages';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -35,6 +36,10 @@ const App: React.FC = () => {
         <Route
           path="/profile/:username"
           element={loggedInUser ? <Layout><Profile /></Layout> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/messages"
+          element={loggedInUser ? <Layout><Messages /></Layout> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>
