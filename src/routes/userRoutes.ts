@@ -19,7 +19,7 @@ router.get('/', async (req: Request, res: Response) => {
 // User Signup
 router.post('/signup', async (req: Request, res: Response) => {
   try {
-    const { username, password, name, avatar, bio } = req.body;
+    const { username, password, name, bio, avatar } = req.body;
 
     if (!username || !password || !name) {
       return res.status(400).json({ error: 'Required fields are missing' });
@@ -36,11 +36,8 @@ router.post('/signup', async (req: Request, res: Response) => {
       username,
       password: hashedPassword,
       name,
-      avatar: avatar || 'https://randomuser.me/api/portraits/men/8.jpg',
-      bio: bio || '',
-      followers: 0,
-      following: 0,
-      posts: [],
+      bio,
+      avatar, // Save the avatar in the database
     });
 
     await newUser.save();
