@@ -2,6 +2,22 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setLoggedInUser } from '../slice/userSlice';
+import {
+  LoginContainer,
+  LoginBox,
+  Logo,
+  ErrorText,
+  LoginForm,
+  Input,
+  LoginButton,
+  Divider,
+  DividerText,
+  FacebookButton,
+  SignupRedirect,
+  Footer,
+  FooterList,
+  FooterItem,
+} from './Login.styles';
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
@@ -10,7 +26,8 @@ const Login: React.FC = () => {
   const dispatch = useDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -40,15 +57,45 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
-        <input type="password" name="password" placeholder="Password" onChange={handleChange} required />
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <LoginContainer>
+      <LoginBox>
+        <Logo>Instagram</Logo>
+        {error && <ErrorText>{error}</ErrorText>}
+        <LoginForm onSubmit={handleSubmit}>
+          <Input
+            type="text"
+            name="username"
+            placeholder="Username"
+            onChange={handleChange}
+            required
+          />
+          <Input
+            type="password"
+            name="password"
+            placeholder="Password"
+            onChange={handleChange}
+            required
+          />
+          <LoginButton type="submit">Log In</LoginButton>
+        </LoginForm>
+        <Divider>
+          <DividerText>OR</DividerText>
+        </Divider>
+        <FacebookButton>Log in with Facebook</FacebookButton>
+      </LoginBox>
+      <SignupRedirect>
+        Don't have an account? <a href="/signup">Sign up</a>
+      </SignupRedirect>
+      <Footer>
+        <FooterList>
+          <FooterItem><a href="#">About</a></FooterItem>
+          <FooterItem><a href="#">Help</a></FooterItem>
+          <FooterItem><a href="#">Privacy</a></FooterItem>
+          <FooterItem><a href="#">Terms</a></FooterItem>
+          <FooterItem><a href="#">Locations</a></FooterItem>
+        </FooterList>
+      </Footer>
+    </LoginContainer>
   );
 };
 

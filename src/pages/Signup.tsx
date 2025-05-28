@@ -1,9 +1,34 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  SignupContainer,
+  SignupBox,
+  Logo,
+  SignupText,
+  ErrorText,
+  SignupForm,
+  Input,
+  FileUploadLabel,
+  SignupButton,
+  AvatarPreview,
+  Divider,
+  DividerText,
+  FacebookButton,
+  LoginRedirect,
+  Footer,
+  FooterList,
+  FooterItem,
+} from "./Signup.styles";
 
 const Signup: React.FC = () => {
-  const [formData, setFormData] = useState({ username: '', password: '', name: '', bio: '', avatar: '' });
-  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    name: "",
+    bio: "",
+    avatar: "",
+  });
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -25,51 +50,102 @@ const Signup: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/users/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/users/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Signup failed');
+        throw new Error(data.error || "Signup failed");
       }
 
-      navigate('/login');
+      navigate("/login");
     } catch (err: any) {
       setError(err.message);
     }
   };
 
   return (
-    <div>
-      <h2>Signup</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Username:</label>
-          <input type="text" name="username" value={formData.username} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" name="password" value={formData.password} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Name:</label>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} required />
-        </div>
-        <div>
-          <label>Bio:</label>
-          <input type="text" name="bio" value={formData.bio} onChange={handleChange} />
-        </div>
-        <div>
-          <label>Avatar:</label>
-          <input type="file" accept="image/*" onChange={handleFileChange} />
-        </div>
-        <button type="submit">Signup</button>
-      </form>
-    </div>
+    <SignupContainer>
+      <SignupBox>
+        <Logo>Instagram</Logo>
+        <SignupText>
+          Sign up to see photos and videos from your friends.
+        </SignupText>
+        {error && <ErrorText>{error}</ErrorText>}
+        <SignupForm onSubmit={handleSubmit}>
+          <Input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            type="text"
+            name="bio"
+            placeholder="Bio (optional)"
+            value={formData.bio}
+            onChange={handleChange}
+          />
+          <FileUploadLabel>
+            <span>Upload Avatar</span>
+            <input type="file" accept="image/*" onChange={handleFileChange} />
+          </FileUploadLabel>
+          {formData.avatar && (
+            <AvatarPreview>
+              <img src={formData.avatar} alt="Avatar Preview" />
+            </AvatarPreview>
+          )}
+          <SignupButton type="submit">Sign Up</SignupButton>
+        </SignupForm>
+        <Divider>
+          <DividerText>OR</DividerText>
+        </Divider>
+        <FacebookButton>Sign up with Facebook</FacebookButton>
+      </SignupBox>
+      <LoginRedirect>
+        Have an account? <a href="/login">Log in</a>
+      </LoginRedirect>
+      <Footer>
+        <FooterList>
+          <FooterItem>
+            <a href="#">About</a>
+          </FooterItem>
+          <FooterItem>
+            <a href="#">Help</a>
+          </FooterItem>
+          <FooterItem>
+            <a href="#">Privacy</a>
+          </FooterItem>
+          <FooterItem>
+            <a href="#">Terms</a>
+          </FooterItem>
+          <FooterItem>
+            <a href="#">Locations</a>
+          </FooterItem>
+        </FooterList>
+      </Footer>
+    </SignupContainer>
   );
 };
 
