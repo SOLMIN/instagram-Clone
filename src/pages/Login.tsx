@@ -17,11 +17,13 @@ import {
   Footer,
   FooterList,
   FooterItem,
+  Spinner,
 } from './Login.styles';
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // State for spinner
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -32,8 +34,8 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true); // Show spinner
     try {
-      console.log('Login form data:', formData); // Debug log
       const response = await fetch('/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -53,6 +55,8 @@ const Login: React.FC = () => {
       navigate('/');
     } catch (err: any) {
       setError(err.message);
+    } finally {
+      setLoading(false); // Hide spinner
     }
   };
 
@@ -76,12 +80,16 @@ const Login: React.FC = () => {
             onChange={handleChange}
             required
           />
-          <LoginButton type="submit">Log In</LoginButton>
+          <LoginButton type="submit" disabled={loading}>
+            {loading ? <Spinner /> : 'Log In'}
+          </LoginButton>
         </LoginForm>
         <Divider>
           <DividerText>OR</DividerText>
         </Divider>
-        <FacebookButton>Log in with Facebook</FacebookButton>
+        <FacebookButton disabled={loading}>
+          {loading ? <Spinner /> : 'Log in with Facebook'}
+        </FacebookButton>
       </LoginBox>
       <SignupRedirect>
         Don't have an account? <a href="/signup">Sign up</a>

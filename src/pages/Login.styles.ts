@@ -9,6 +9,24 @@ export const LoginContainer = styled.div`
   margin: 0 auto;
 `;
 
+export const Spinner = styled.div`
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #0095f6;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
 export const LoginBox = styled.div`
   background-color: #fff;
   border: 1px solid #ddd;
